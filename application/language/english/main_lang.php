@@ -32,7 +32,7 @@ $lang['work_phone'] = 'Work Phone';
 $lang['source'] = 'Source';
 $lang['source_note'] = 'Source Note';
 
-$lang['idcard'] = 'Id card number';
+$lang['idcard'] = 'ID Card Number';
 $lang['lisence'] = 'License Number';
 
 $lang['yes'] = 'Yes';
@@ -50,12 +50,20 @@ $lang['disability_declared'] =  'Disability Declared';
 $lang['disability_note'] =  'Disability Notes';
 
 $lang['personal_details'] = 'Personal Details';
+
+$lang['other_details'] = 'Other Details';
+
 $lang['identification_details'] =  'Identification Details';
 $lang['emergency_contact'] =  'Emergency Contact';
 $lang['mandatory'] = 'fields marked with * are mandatory';
 
 
+$lang['first_name'] = 'First Name';
+$lang['last_name'] = 'Last Name';
+$lang['middle_name'] = 'Middle Name';
 
+$lang['member_id'] = 'Member ID';
+$lang['contact_information'] = 'Contact Information';
 
 
 
