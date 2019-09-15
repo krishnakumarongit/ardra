@@ -55,6 +55,10 @@ $route['logout'] = 'welcome/logout';
 
 $route['add-member/(:num)'] = 'member/add/$1';
 
+
+$route['list-members'] = 'member/list';
+$route['list-members/(:num)'] = 'member/list/$1';
+
 $route['add-member'] = 'member/add';
 
 

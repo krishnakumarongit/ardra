@@ -27,6 +27,29 @@ class Member_model extends CI_Model {
 			}
         }
         
+        public function getMembers($limit, $start, $get) 
+        {
+			 if (isset($get['member_id']) && $get['member_id'] !="" ) {
+				$this->db->where('member_id', $get['member_id']);
+			 }
+			 if (isset($get['name']) && $get['name'] !="" ) {
+				$this->db->where('first_name', $get['name']);
+			 }
+			 $this->db->limit($limit, $start);
+             $query = $this->db->get('members');
+             return $query->result();		
+		}
+		
+		public function get_count($get) {
+			if (isset($get['member_id']) && $get['member_id'] !="" ) {
+				$this->db->where('member_id', $get['member_id']);
+			}
+			if (isset($get['name']) && $get['name'] !="" ) {
+				$this->db->like('first_name', $get['name']);
+			}
+			return $this->db->get('members');
+        }
+        
          public function getMemberId() {
 			$query = $this->db->query('SELECT id FROM members');
 			return $query->num_rows() + 1;	

@@ -219,8 +219,8 @@ class Member extends MY_Controller {
 					'disability' => $this->input->post('disability'),
 					'disability_note' => $this->input->post('disability_note'),
 					'middle_name' => $this->input->post('middle_name'),
-					'gym_id' => 1,
-					'branch' => 2,
+					'gym_id' => $_SESSION['gym'],
+					'branch' => $_SESSION['branch'],
 					'status' => 'Active'					
 				];	
 				if ($id == 0) {
@@ -252,6 +252,40 @@ class Member extends MY_Controller {
 		}
 		
 	}
+	
+	
+	function list()
+	{
+		$this->load->library("pagination");
+		$this->load->model('Member_model','member');
+		$config = array();
+        $config["base_url"] = site_url('list-members');
+        $config["total_rows"] = $this->member->get_count($_GET);
+        $config["per_page"] = 1;
+        $config["uri_segment"] = 2;
+        $config['reuse_query_string'] = true;
+		$config['full_tag_open'] = "<ul class='pagination pagination-sm no-margin pull-right'>";
+		$config['full_tag_close'] ="</ul>";
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$config['cur_tag_open'] = "<li class='disabled'><li class='active'><a href='#'>";
+		$config['cur_tag_close'] = "<span class='sr-only'></span></a></li>";
+		$config['next_tag_open'] = "<li>";
+		$config['next_tagl_close'] = "</li>";
+		$config['prev_tag_open'] = "<li>";
+		$config['prev_tagl_close'] = "</li>";
+		$config['first_tag_open'] = "<li>";
+		$config['first_tagl_close'] = "</li>";
+		$config['last_tag_open'] = "<li>";
+		$config['last_tagl_close'] = "</li>";
+        $this->pagination->initialize($config);
+        $page = ($this->uri->segment(2)) ? $this->uri->segment(2) : 0;
+        $data['links'] = $this->pagination->create_links();
+        $data['memebrs'] = $this->member->getMembers($config["per_page"], $page, $_GET);
+		$view = $this->load->view('member_list',['data' => $data],true);
+		$this->load->view('layout',['view' => $view]);		
+	}
+	
     
     function formatDate($str)
 	{

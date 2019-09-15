@@ -27,7 +27,20 @@ class Welcome extends CI_Controller {
 					if (isset($result[0])) {
 						if (isset($result[0]->id) && $result[0]->id > 0) {
 						  $_SESSION['user_id'] = $result[0]->id;
-						  $_SESSION['gym'] = $result[0]->gym;	
+						  $_SESSION['gym'] = $result[0]->id;	
+						  //get master branch 
+						  $this->load->model('Gym_settings_model','settings');
+						  //get gym settings
+						  $branch = $this->settings->get_settings($result[0]->id);
+						  if (count($branch) > 0) {
+							  if (isset($branch[0]->id) && $branch[0]->id > 0 ) {
+								  $_SESSION['branch'] = $branch[0]->id;
+							  } else {
+								  redirect(site_url('logout'));
+							  }
+						  } else {
+								  redirect(site_url('logout'));
+						  }
 						  $_SESSION['success'] = $this->lang->line('login_success');				
 						  redirect(site_url('dashboard'));
 					    }
@@ -50,6 +63,7 @@ class Welcome extends CI_Controller {
 		$this->lang->load('main', 'english');
 		unset($_SESSION['user_id']);
 		unset($_SESSION['gym']);
+		unset($_SESSION['branch']);
 		$_SESSION['success'] = $this->lang->line('logout_message');			
 		redirect(site_url('login'));
 		
