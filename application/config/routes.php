@@ -53,7 +53,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $route['login'] = 'welcome/login';
 $route['logout'] = 'welcome/logout';
 
+$route['add-member/(:num)'] = 'member/add/$1';
+
 $route['add-member'] = 'member/add';
+
 
 $route['dashboard'] = 'dashboard/index';
 

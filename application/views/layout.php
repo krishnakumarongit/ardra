@@ -39,6 +39,7 @@
   <link rel="shortcut icon" href="<?php echo site_url('favicon.ico'); ?>" type="image/x-icon">
 <link rel="icon" href="<?php echo site_url('favicon.ico'); ?>" type="image/x-icon">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+<script src="<?php echo site_url('theme/bower_components/jquery/dist/jquery.min.js'); ?>"></script>
 </head>
 <body class="hold-transition <?php echo isset($this->theme) ? $this->theme : 'skin-red'; ?> sidebar-mini">
 <div class="wrapper">
@@ -308,7 +309,8 @@
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
-    <?php echo $view; ?>
+
+	 <?php echo $view; ?>
   </div>
   <!-- /.content-wrapper -->
   <footer class="main-footer">
@@ -323,7 +325,7 @@
 <!-- ./wrapper -->
 
 <!-- jQuery 3 -->
-<script src="<?php echo site_url('theme/bower_components/jquery/dist/jquery.min.js'); ?>"></script>
+
 <!-- jQuery UI 1.11.4 -->
 <script src="<?php echo site_url('theme/bower_components/jquery-ui/jquery-ui.min.js'); ?>"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->

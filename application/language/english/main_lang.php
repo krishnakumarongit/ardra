@@ -51,6 +51,8 @@ $lang['disability_note'] =  'Disability Notes';
 
 $lang['personal_details'] = 'Personal Details';
 
+$lang['subscription_details'] = 'Subscription Details';
+
 $lang['other_details'] = 'Other Details';
 
 $lang['identification_details'] =  'Identification Details';
@@ -64,6 +66,14 @@ $lang['middle_name'] = 'Middle Name';
 
 $lang['member_id'] = 'Member ID';
 $lang['contact_information'] = 'Contact Information';
+
+$lang['is_required'] = 'is a required field';
+
+$lang['max_length'] = 'should not exceed maximum character length of ';
+$lang['invalid_date'] = ' is not a valid date';
+$lang['id_unique'] = ' already exists';
+
+
 
 
 
