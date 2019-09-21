@@ -54,12 +54,19 @@ $route['login'] = 'welcome/login';
 $route['logout'] = 'welcome/logout';
 
 $route['add-member/(:num)'] = 'member/add/$1';
-
-
 $route['list-members'] = 'member/list';
 $route['list-members/(:num)'] = 'member/list/$1';
-
 $route['add-member'] = 'member/add';
+
+$route['add-membership/(:num)'] = 'membership/add/$1';
+$route['list-memberships'] = 'membership/list';
+$route['list-memberships/(:num)'] = 'membership/list/$1';
+$route['add-membership'] = 'membership/add';
+$route['view-membership/(:num)'] = 'membership/view/$1';
+
+$route['delete-membership/(:num)'] = 'membership/delete/$1';
+
+
 
 
 $route['dashboard'] = 'dashboard/index';

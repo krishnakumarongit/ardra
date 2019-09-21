@@ -1,11 +1,13 @@
 <section class="content-header">
   <h1>
-	<?php echo $this->lang->line('members'); ?>
+	<?php echo $this->lang->line('membership'); ?>
 	<small><?php echo $this->lang->line('list'); ?></small>
   </h1>
+  
+  
   <ol class="breadcrumb">
 	<li><a href="<?php echo site_url('dashboard'); ?>"><i class="fa fa-dashboard"></i> <?php echo $this->lang->line('home'); ?></a></li>
-	<li class="active"><?php echo $this->lang->line('members'); ?></li>
+	<li class="active"><?php echo $this->lang->line('memberships'); ?></li>
   </ol>
 </section>
 
@@ -37,17 +39,7 @@
         <!-- /.box-header -->
         <div class="box-body" style="">
           <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-				  <label><?php echo $this->lang->line('member_id'); ?></label>
-				  <input class="form-control" name="member_id" type="text" value="<?php echo isset($_GET['member_id']) ? $_GET['member_id'] : '';  ?>">
-                 </div>
-              <!-- /.form-group -->
-              <div class="form-group">
-                     </div>
-              <!-- /.form-group -->
-            </div>
-            <!-- /.col -->
+             <!-- /.col -->
             <div class="col-md-6">
               <div class="form-group">
                 <label><?php echo $this->lang->line('name'); ?></label>
@@ -64,7 +56,7 @@
         </div>
         <!-- /.box-body -->
         <div class="box-footer" style="">
-         <a href="<?php echo site_url('list-members'); ?>"><button type="button" class="btn btn-default"><i class="fa fa-times-circle"></i> <?php echo $this->lang->line('clear'); ?></button></a>
+         <a href="<?php echo site_url('list-memberships'); ?>"><button type="button" class="btn btn-default"><i class="fa fa-times-circle"></i> <?php echo $this->lang->line('clear'); ?></button></a>
                 <button type="submit" class="btn btn-info pull-right"><i class="fa fa-search"></i> <?php echo $this->lang->line('search'); ?></button>
         
         </div>
@@ -76,39 +68,63 @@
           	
 		
           <div class="box">
+			  <div class="box-header with-border">
+        
+
+          <div class="box-tools pull-right">
+            <a href="<?php echo site_url('add-membership'); ?>"><button type="submit" class="btn btn-info pull-right"><i class="fa fa-plus"></i>&nbsp;<?php echo $this->lang->line('add');?> <?php echo $this->lang->line('membership');?></button></a>
+          </div>
+        </div>
             <!-- /.box-header -->
             <div class="box-body">
 				<div class="table-responsive" >
               <table class="table table-bordered">
                 <tbody>
 				<tr>
-                  <th><?php echo $this->lang->line('id'); ?></th>
                   <th><?php echo $this->lang->line('name'); ?></th>
-                  <th><?php echo $this->lang->line('dob_label'); ?></th>
-                  <th><?php echo $this->lang->line('sex'); ?></th>
-                  <th><?php echo $this->lang->line('since'); ?></th>
-                  <th><?php echo $this->lang->line('actions'); ?></th>
+                  <th><?php echo $this->lang->line('duration'); ?></th>
+                  <th><?php echo $this->lang->line('fee'); ?></th>
+                  <th><?php echo $this->lang->line('status'); ?></th>
+                  <th style="text-align:center;"><?php echo $this->lang->line('actions'); ?></th>
                 </tr>
                 <?php 
                 if (count($data['memebrs']) > 0) { 
 				foreach($data['memebrs'] as $row) {	
 				?>
                 <tr>
-                  <td><?php echo $row->member_id; ?></td>
-                  <td><?php echo $row->first_name; ?> <?php echo $row->last_name; ?></td>
+                  <td><?php echo $row->name; ?></td>
+                  <td><?php echo $row->duration; ?> <?php echo $this->lang->line($row->duration_type); ?> </td>
                   <td>
-                    <?php echo date('d/M/Y',strtotime($row->dob)); ?>
+                    <?php echo $row->fee.' '.$this->currency; ?>
                   </td>
                    <td>
-                    <?php echo $this->lang->line($row->sex); ?>
+                    <?php if($row->status == 'active'){ 
+							echo '<span class="label label-success">'.$this->lang->line($row->status).'</span>';  
+						} else 
+						{ 
+							echo '<span class="label label-danger">'.$this->lang->line($row->status).'</span>';
+						} 
+					?>
                   </td>
-                  <td><?php echo date('d/M/Y',strtotime($row->created_at)); ?></td>
                   <td style="text-align:center;">				
-                  <button type="button" class="btn btn-info"><i class="fa fa-cogs"></i>&nbsp;<?php echo $this->lang->line('actions'); ?></button>
+					  <a title="<?php echo $this->lang->line('view'); ?>" href="<?php echo site_url('view-membership/'.$row->id); ?>">
+					  <button type="button" class="btn btn-success btn-sm" ><i class="fa fa-eye"></i>
+                </button></a>
+                
+                 <a title="<?php echo $this->lang->line('edit'); ?>" href="<?php echo site_url('add-membership/'.$row->id); ?>">
+					  <button type="button" class="btn btn-primary btn-sm" ><i class="fa fa-pencil"></i>
+                </button></a>
+                
+ <a title="<?php echo $this->lang->line('delete'); ?>" onclick="return confirm('<?php echo $this->lang->line('delete_confirm'); ?>');" href="<?php echo site_url('delete-membership/'.$row->id); ?>">
+					  <button type="button" class="btn btn-danger btn-sm" ><i class="fa fa-trash"></i>
+                </button></a>
+                
+                
+                
                 </td>
                 </tr>
                 <?php }} else { ?>
-                 <tr><td colspan="6"><?php echo $this->lang->line('no_records'); ?></td></tr>
+                 <tr><td colspan="5"><?php echo $this->lang->line('no_records'); ?></td></tr>
                 <?php } ?>
               </tbody>              
               </table>

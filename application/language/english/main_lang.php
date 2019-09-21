@@ -40,8 +40,15 @@ $lang['no'] = 'No';
 
 $lang['active'] = 'Active';
 $lang['in-active'] = 'In-active';
-$lang['deleted'] = 'deleted';
+$lang['deleted'] = 'Deleted';
 $lang['status'] = 'Status';
+$lang['select'] = 'Select';
+
+
+
+$lang['day'] = 'Day(s)';
+$lang['month'] = 'Month(s)';
+$lang['year'] = 'Year(s)';
 
 
 $lang['emmergency_contact_name'] = 'Emergency Contact Name';
@@ -72,8 +79,57 @@ $lang['is_required'] = 'is a required field';
 $lang['max_length'] = 'should not exceed maximum character length of ';
 $lang['invalid_date'] = ' is not a valid date';
 $lang['id_unique'] = ' already exists';
+$lang['submit'] = 'Submit';
+
+$lang['member_list'] = 'Memeber List';
+$lang['members'] = 'Memebers';
+$lang['member'] = 'Memeber';
+
+$lang['home'] = 'Home';
 
 
+$lang['add'] = 'Add';
+$lang['view'] = 'View';
+$lang['delete'] = 'Delete';
+$lang['edit'] = 'Edit';
+$lang['list'] = 'List';
 
+$lang['name'] = 'Name';
+$lang['search'] = 'Search';
+$lang['actions'] = 'Actions';
 
+$lang['action'] = 'Action';
+
+$lang['since'] = 'Since';
+
+$lang['dob_label'] = 'DOB';
+$lang['id'] = 'ID';
+
+$lang['cancel'] = 'Cancel';
+$lang['clear'] = 'Clear';
+
+$lang['add'] = 'Add';
+$lang['update'] = 'Update';
+
+$lang['no_records'] = 'No records found';
+$lang['total_records'] = 'Total Records';
+$lang['membership'] = 'Membersip';
+$lang['memberships'] = 'Membersips';
+$lang['name'] = 'Name';
+$lang['fee'] = 'Fee';
+$lang['duration'] = 'Duration';
+$lang['duration_type'] = 'Duration Type';
+$lang['description'] = 'Description';
+$lang['status'] = 'Status';
+$lang['fields_required'] = 'Fields marked with an * are required';
+$lang['fee_validation'] = 'We dont understand the input for Fee field. Try using only numbers with a period(.) to indicate cents like 100.50';
+$lang['duration_validation'] = 'We dont understand the input for Duration field. Try using only numbers like 12';
+$lang['add_success'] = ' added successfully';
+$lang['deleted_success'] = ' deleted successfully';
+
+$lang['update_success'] = ' updated successfully';
+$lang['delete_confirm'] = 'Are you sure you want to delete ?';
+
+$lang['created_at'] = 'Date created';
+ 
 

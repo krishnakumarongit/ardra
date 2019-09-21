@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class MY_Controller extends CI_Controller {
 	
-  public $gym_id, $language, $currency, $theme, $branch_name;
+  public $gym_id, $language, $currency, $theme, $branch_name, $timezone;
   public function __construct()
   {
     parent::__construct(); 
@@ -18,6 +18,7 @@ class MY_Controller extends CI_Controller {
 					$this->branch_name = $result[0]->name;
 					$this->currency = $result[0]->currency;
 					$this->theme = $result[0]->theme;
+					$this->timezone = $result[0]->timezone;
 				} else {
 					$_SESSION['error'] = $this->lang->line('login_to_continue');	
 		            redirect(site_url('logout'));
@@ -33,9 +34,13 @@ class MY_Controller extends CI_Controller {
 		
 		if (isset($this->language) && $this->language !="") {
 		   $this->lang->load('main', $this->language);
-		}else {	
+		} else {	
 		   $this->lang->load('main', 'english');
 	    }
+	    
+	    if (isset($this->timezone) && $this->timezone !="") {
+			date_default_timezone_set($this->timezone);
+		} 
 	    
   }
   

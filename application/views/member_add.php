@@ -1,12 +1,12 @@
 <section class="content-header">
   <h1>
-	Members
-	<small>Add</small>
+	<?php echo $this->lang->line('member'); ?>
+	<small><?php if($id == 0){ echo $this->lang->line('add'); } else { echo $this->lang->line('update'); } ?></small>
   </h1>
   <ol class="breadcrumb">
-	<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-	<li><a href="#">Forms</a></li>
-	<li class="active">Advanced Elements</li>
+	<li><a href="<?php echo site_url('dashboard'); ?>"><i class="fa fa-dashboard"></i> <?php echo $this->lang->line('home'); ?></a></li>
+	<li><a href="<?php echo site_url('list-members'); ?>"><?php echo $this->lang->line('members'); ?></a></li>
+	<li class="active"><?php echo $this->lang->line('member'); ?> <?php if($id == 0){ echo $this->lang->line('add'); } else { echo $this->lang->line('update'); } ?></li>
   </ol>
 </section>
 
@@ -67,8 +67,8 @@
                 <?php $middle_select = set_value('sex', $data['sex']); ?>
                 <select class="form-control" name="sex" id="sex">
 					<option value=""><?php echo $this->lang->line('select'); ?></option>
-					<option <?php if ($middle_select == 'Male') { ?> selected <?php } ?> value="<?php echo $this->lang->line('male'); ?>"><?php echo $this->lang->line('male'); ?></option>
-					<option <?php if ($middle_select == 'Female') { ?> selected <?php } ?> value="<?php echo $this->lang->line('female'); ?>"><?php echo $this->lang->line('female'); ?></option>
+					<option <?php if ($middle_select == 'male') { ?> selected <?php } ?> value="male"><?php echo $this->lang->line('male'); ?></option>
+					<option <?php if ($middle_select == 'female') { ?> selected <?php } ?> value="female"><?php echo $this->lang->line('female'); ?></option>
 				</select>
               </div>
               <!-- /.form-group -->
@@ -81,8 +81,7 @@
 				 </div>
               <!-- /.form-group -->
               <div class="form-group">
-				   <button type="submit" class="btn btn-primary">Submit</button>
-                 </div>
+			      </div>
               <!-- /.form-group -->
             </div>
             
@@ -93,6 +92,27 @@
 					                <label><?php echo $this->lang->line('member_id'); ?><span class="text-red">*</span></label>
 				<input name="member_id" value="<?php echo set_value('member_id', $data['member_id']); ?>"  id="member_id" type="text" class="form-control" placeholder="<?php echo $this->lang->line('member_id'); ?>">
 				
+				</div>
+				<!-- /.form-group -->
+				<div class="form-group">
+					</div>
+              <!-- /.form-group -->
+            </div>
+            
+            <div class="col-md-6">
+              <div class="form-group">
+                	 </div>
+              <!-- /.form-group -->
+              <div class="form-group">
+				   <button type="submit" class="btn btn-primary"><?php echo $this->lang->line('submit'); ?></button>
+                 </div>
+              <!-- /.form-group -->
+            </div>
+            
+            
+            <!-- /.col -->
+            <div class="col-md-6">
+				<div class="form-group">
 				</div>
 				<!-- /.form-group -->
 				<div class="form-group">
@@ -199,7 +219,7 @@
 		</div>
 		<!-- /.form-group -->
 		<div class="form-group">
-		 <button type="submit" class="btn btn-primary">Submit</button>
+		 <button type="submit" class="btn btn-primary"><?php echo $this->lang->line('submit'); ?></button>
 		</div>
 		<!-- /.form-group -->
 		</div>
@@ -262,7 +282,7 @@
 	<div class="row">
 		<div class="col-md-6">
 			<div class="form-group">
-			<button type="submit" class="btn btn-primary">Submit</button>
+			<button type="submit" class="btn btn-primary"><?php echo $this->lang->line('submit'); ?></button>
 			</div>
 		<!-- /.form-group -->
 		<!-- /.form-group -->
@@ -293,7 +313,7 @@
 	<div class="row">
 		<div class="col-md-6">
 			<div class="form-group">
-			<button type="submit" class="btn btn-primary">Submit</button>
+			<button type="submit" class="btn btn-primary"><?php echo $this->lang->line('submit'); ?></button>
 			</div>
 		<!-- /.form-group -->
 		<!-- /.form-group -->

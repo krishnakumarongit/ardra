@@ -17,14 +17,14 @@ class Member extends MY_Controller {
         $this->load->model('Member_model','member');
         
         if($id == 0) {
-			$maxId = $this->member->getMemberId();
+			$maxId = $this->member->getMemberId($_SESSION['branch'], $_SESSION['gym']);
 			$data = ['first_name' => '','last_name' => '','sex' => '','dob' => '','member_id' => $maxId,
 			'email' => '','address' => '','city' => '','state' => '','country' => '','zip_code' => '',
 			'home_phone' => '','work_phone' => '','idcard' => '','lisence' => '','emmergency_contact_name' => '',
 			'emmergency_contact_number' => '',
 			'source' => '','source_note' => '','disability' => '','disability_note' => '','middle_name' => ''];
 	    } else {
-			$result = $this->member->getMember($id);
+			$result = $this->member->getMember($id, $_SESSION['branch'], $_SESSION['gym']);
 			if ($result['status'] == 0) {
 				die('you are not authorised to access this link');
 			} else {
@@ -56,17 +56,17 @@ class Member extends MY_Controller {
             );
             
             if ($id == 0) {
-                $this->form_validation->set_rules('member_id', $this->lang->line('member_id'), 'trim|required|max_length[255]|is_unique[members.member_id]',
+                $this->form_validation->set_rules('member_id', $this->lang->line('member_id'), 'trim|required|max_length[255]|callback_brach_unique',
 						array('required' => $this->lang->line('member_id').' '.$this->lang->line('is_required'),
-						'is_unique' => $this->lang->line('member_id').' '.$this->lang->line('id_unique'),
+						'brach_unique' => $this->lang->line('member_id').' '.$this->lang->line('id_unique'),
 						'max_length' => $this->lang->line('member_id').' '.$this->lang->line('max_length').'255'),
 						
 				);
 			} else {
 				if ($this->input->post('member_id') !=  $data['member_id']) {
-					$this->form_validation->set_rules('member_id', $this->lang->line('member_id'), 'trim|required|max_length[255]|is_unique[members.member_id]',
+					$this->form_validation->set_rules('member_id', $this->lang->line('member_id'), 'trim|required|max_length[255]|callback_brach_unique',
 						array('required' => $this->lang->line('member_id').' '.$this->lang->line('is_required'),
-						'is_unique' => $this->lang->line('member_id').' '.$this->lang->line('id_unique'),
+						'brach_unique' => $this->lang->line('member_id').' '.$this->lang->line('id_unique'),
 						'max_length' => $this->lang->line('member_id').' '.$this->lang->line('max_length').'255'),	
 				    );	
 				}
@@ -232,8 +232,17 @@ class Member extends MY_Controller {
 				die('success');
 			}   
 		}
+		
+		if ($id > 0) {
+			$meta_title = $this->lang->line('update');
+		} else {
+			$meta_title = $this->lang->line('add');
+		}
+		$meta_title .= ' '.$this->lang->line('member');
+		
+		
 		$view = $this->load->view('member_add',['data' => $data, 'country' => $country,'id' => $id],true);
-		$this->load->view('layout',['view' => $view]);	
+		$this->load->view('layout',['view' => $view, 'meta_title' => $meta_title]);	
 	}
 	
 	function validate_date($str)
@@ -250,7 +259,20 @@ class Member extends MY_Controller {
 		} else {
 		   return FALSE;
 		}
-		
+	}
+	
+	function brach_unique($str) {
+		if($str !=""){
+			$this->load->model('Member_model','member');
+			$result = $this->member->getMemberById($str, $_SESSION['branch'], $_SESSION['gym']);
+			if ($result['status'] == 0) {
+				return TRUE;
+			} else {
+				return FALSE;
+			}		
+		} else {
+			return FALSE;
+		}
 	}
 	
 	
@@ -260,9 +282,9 @@ class Member extends MY_Controller {
 		$this->load->model('Member_model','member');
 		$config = array();
         $config["base_url"] = site_url('list-members');
-        $config["total_rows"] = $this->member->get_count($_GET);
-        $config["per_page"] = 1;
-        $config["uri_segment"] = 2;
+        $config["total_rows"] = $this->member->get_count($_GET, $_SESSION['branch'], $_SESSION['gym']);
+        $config["per_page"] = PAGE_COUNT;
+        $config["uri_segment"] = PAGE_SEGMENT;
         $config['reuse_query_string'] = true;
 		$config['full_tag_open'] = "<ul class='pagination pagination-sm no-margin pull-right'>";
 		$config['full_tag_close'] ="</ul>";
@@ -279,17 +301,16 @@ class Member extends MY_Controller {
 		$config['last_tag_open'] = "<li>";
 		$config['last_tagl_close'] = "</li>";
         $this->pagination->initialize($config);
-        $page = ($this->uri->segment(2)) ? $this->uri->segment(2) : 0;
+        $page = ($this->uri->segment(2)) ? $this->uri->segment(PAGE_SEGMENT) : 0;
         $data['links'] = $this->pagination->create_links();
-        $data['memebrs'] = $this->member->getMembers($config["per_page"], $page, $_GET);
-		$view = $this->load->view('member_list',['data' => $data],true);
-		$this->load->view('layout',['view' => $view]);		
+        $data['memebrs'] = $this->member->getMembers($config["per_page"], $page, $_GET, $_SESSION['branch'], $_SESSION['gym']);
+		$view = $this->load->view('member_list',['data' => $data, 'total' => $config["total_rows"]],true);
+		$this->load->view('layout',['view' => $view, 'meta_title' => $this->lang->line('members')]);		
 	}
 	
     
     function formatDate($str)
 	{
-
 		$test_date = $str;
 		$test_arr  = explode('/', $test_date);
         return $test_arr[2].'-'.$test_arr[1].'-'.$test_arr[0];
