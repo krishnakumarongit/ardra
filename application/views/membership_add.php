@@ -66,6 +66,9 @@
               <select name="duration_type" id="duration_type"  class="form-control">
                	  <option value=""><?php echo $this->lang->line('select'); ?></option>
                	  <option <?php if ($duration_select == 'day') { ?> selected <?php } ?> value="day"><?php echo $this->lang->line('day'); ?></option>
+               	 
+               	  <option <?php if ($duration_select == 'week') { ?> selected <?php } ?> value="week"><?php echo $this->lang->line('week'); ?></option>
+               	 
                	  <option <?php if ($duration_select == 'month') { ?> selected <?php } ?> value="month"><?php echo $this->lang->line('month'); ?></option>
                	  <option <?php if ($duration_select == 'year') { ?> selected <?php } ?> value="year"><?php echo $this->lang->line('year'); ?></option>
                	</select>

@@ -25,7 +25,7 @@
     <!-- /.box-header -->
         <div class="box-body">
 			
-			<table class="table table-bordered">
+			<table class="table table-bordered table-striped">
 <tr>
 <td><?php echo $this->lang->line('name'); ?></td>
 <td> <?php echo $data['name']; ?></td>

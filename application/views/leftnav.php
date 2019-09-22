@@ -24,6 +24,21 @@
         
         
         
+        <li class="treeview  <?php if(isset($this->subscription_menu) && $this->subscription_menu == 'active'){ ?> menu-open<?php } ?>" <?php if(isset($this->subscription_menu) && $this->subscription_menu == 'active'){ ?> style="height:auto;" <?php } ?>>
+          <a href="#">
+            <i class="fa  fa-random"></i> <span><?php echo $this->lang->line('subscription'); ?></span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu"  <?php if(isset($this->subscription_menu) && $this->subscription_menu == 'active'){ ?> style="display:block" <?php } ?>>
+            <li class="<?php if(isset($this->subscription_list_menu) && $this->subscription_list_menu == 'active'){ ?> active<?php } ?>"><a href="<?php echo site_url('list-subscriptions'); ?>"><i class="fa fa-circle-o"></i> <?php echo $this->lang->line('subscription'); ?> <?php echo $this->lang->line('list'); ?></a></li>
+            <li class="<?php if(isset($this->subscription_add_menu) && $this->subscription_add_menu == 'active'){ ?> active<?php } ?>"><a href="<?php echo site_url('add-subscription'); ?>"><i class="fa fa-circle-o"></i> <?php echo $this->lang->line('add'); ?> <?php echo $this->lang->line('subscription'); ?></a></li>
+          </ul>
+        </li>
+        
+        
+        
         
         <li class="treeview">
           <a href="#">

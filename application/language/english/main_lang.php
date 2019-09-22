@@ -99,18 +99,13 @@ $lang['search'] = 'Search';
 $lang['actions'] = 'Actions';
 
 $lang['action'] = 'Action';
-
 $lang['since'] = 'Since';
-
 $lang['dob_label'] = 'DOB';
 $lang['id'] = 'ID';
-
 $lang['cancel'] = 'Cancel';
 $lang['clear'] = 'Clear';
-
 $lang['add'] = 'Add';
 $lang['update'] = 'Update';
-
 $lang['no_records'] = 'No records found';
 $lang['total_records'] = 'Total Records';
 $lang['membership'] = 'Membersip';
@@ -126,10 +121,11 @@ $lang['fee_validation'] = 'We dont understand the input for Fee field. Try using
 $lang['duration_validation'] = 'We dont understand the input for Duration field. Try using only numbers like 12';
 $lang['add_success'] = ' added successfully';
 $lang['deleted_success'] = ' deleted successfully';
-
 $lang['update_success'] = ' updated successfully';
 $lang['delete_confirm'] = 'Are you sure you want to delete ?';
-
 $lang['created_at'] = 'Date created';
+$lang['subscription'] = 'Subscription';
+$lang['subscriptions'] = 'Subscriptions';
+$lang['week'] = 'Week';
  
 

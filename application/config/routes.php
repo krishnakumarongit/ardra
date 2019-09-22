@@ -63,8 +63,19 @@ $route['list-memberships'] = 'membership/list';
 $route['list-memberships/(:num)'] = 'membership/list/$1';
 $route['add-membership'] = 'membership/add';
 $route['view-membership/(:num)'] = 'membership/view/$1';
-
 $route['delete-membership/(:num)'] = 'membership/delete/$1';
+
+
+$route['add-subscription/(:num)'] = 'subscription/add/$1';
+$route['list-subscriptions'] = 'subscription/list';
+$route['list-subscriptions/(:num)'] = 'subscription/list/$1';
+$route['add-subscription'] = 'subscription/add';
+$route['view-subscription/(:num)'] = 'subscription/view/$1';
+$route['delete-subscription/(:num)'] = 'subscription/delete/$1';
+
+
+
+
 
 
 
