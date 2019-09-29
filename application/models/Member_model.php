@@ -14,6 +14,18 @@ class Member_model extends CI_Model {
             $this->db->update('members', $data);
         }
         
+        public function getAll($branch_id, $gym_id)
+        {
+			$this->db->where('gym_id', $gym_id);
+			$this->db->where('branch', $branch_id);
+			$this->db->where('status', 'active');
+			
+			$q = $this->db->get('members');
+			$data = $q->result_array();
+            return $data;
+        }
+        
+        
         public function getMember($id, $branch_id, $gym_id)
         {
 			$this->db->where('id', $id);

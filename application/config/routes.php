@@ -62,6 +62,9 @@ $route['add-membership/(:num)'] = 'membership/add/$1';
 $route['list-memberships'] = 'membership/list';
 $route['list-memberships/(:num)'] = 'membership/list/$1';
 $route['add-membership'] = 'membership/add';
+
+$route['get-membership/(:num)'] = 'membership/get/$1';
+
 $route['view-membership/(:num)'] = 'membership/view/$1';
 $route['delete-membership/(:num)'] = 'membership/delete/$1';
 

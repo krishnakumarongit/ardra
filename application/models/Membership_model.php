@@ -28,6 +28,18 @@ class Membership_model extends CI_Model {
 			}
         }
         
+        public function getAll($branch_id, $gym_id)
+        {
+			$this->db->where('gym', $gym_id);
+			$this->db->where('branch', $branch_id);
+			$this->db->where('status', 'active');
+			
+			$q = $this->db->get('memberships');
+			$data = $q->result_array();
+            return $data;
+        }
+        
+        
         public function getMembershipById($id, $branch_id, $gym_id)
         {
 			$this->db->where('name', $id);

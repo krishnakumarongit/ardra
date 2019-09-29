@@ -359,6 +359,10 @@
 <script src="<?php echo site_url('theme/dist/js/adminlte.min.js'); ?>"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="<?php echo site_url('theme/dist/js/pages/dashboard.js'); ?>"></script>
+
+<?php echo isset($dynamic_js) ? $dynamic_js :''; ?>
+
+
 </body>
 </html>
 

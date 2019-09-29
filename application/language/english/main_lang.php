@@ -108,8 +108,13 @@ $lang['add'] = 'Add';
 $lang['update'] = 'Update';
 $lang['no_records'] = 'No records found';
 $lang['total_records'] = 'Total Records';
-$lang['membership'] = 'Membersip';
-$lang['memberships'] = 'Membersips';
+$lang['membership'] = 'Membership';
+$lang['memberships'] = 'Memberships';
+
+$lang['start_date'] = 'Start Date';
+$lang['end_date'] = 'End Date';
+
+
 $lang['name'] = 'Name';
 $lang['fee'] = 'Fee';
 $lang['duration'] = 'Duration';
@@ -127,5 +132,18 @@ $lang['created_at'] = 'Date created';
 $lang['subscription'] = 'Subscription';
 $lang['subscriptions'] = 'Subscriptions';
 $lang['week'] = 'Week';
- 
+$lang['registration_fee'] = 'Registration Fee';
+$lang['discount'] = 'Discount Amount';
+$lang['total'] = 'Sub Total';
 
+$lang['other'] = 'Other';
+$lang['tot_to_be_paid'] = 'Total Amount To Be Paid';
+
+$lang['save_next'] = 'Save And Next';
+$lang['request_processing'] = 'Please wait';
+
+
+
+$lang['registration_fee_validation'] = 'We dont understand the input for registration fee field. Try using only numbers with a period(.) to indicate cents like 100.50';
+$lang['other_fee_validation'] = 'We dont understand the input for other fee field. Try using only numbers with a period(.) to indicate cents like 100.50';
+$lang['discount_validation'] = 'We dont understand the input for discount field. Try using only numbers with a period(.) to indicate cents like 100.50';

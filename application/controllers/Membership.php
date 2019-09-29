@@ -219,6 +219,19 @@ class Membership extends MY_Controller {
 		$view = $this->load->view('membership_view', ['data' => $data, 'id' => $id], true);
 		$this->load->view('layout',['view' => $view, 'meta_title' => $meta_title]);	
 	}
+	
+	function get($id) {
+		$data = array();
+		$this->load->model('Membership_model','membership');
+		$result = $this->membership->getMembership($id, $_SESSION['branch'], $_SESSION['gym']);
+		if ($result['status'] == 0) {
+			$data = array('status'=> 0);
+		} else {
+			$data = array('status'=> 1,'data' => $result['data']);
+		}
+		echo json_encode($data);
+		exit;
+	}
 
 
 	

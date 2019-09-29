@@ -20,6 +20,14 @@ class Subscription extends MY_Controller {
         $this->load->library('form_validation');
         $this->load->model('Country_model','country');
         $this->load->model('Membership_model','membership');
+        $this->load->model('Member_model','member');
+        
+        
+        
+        
+        
+        $memberships = $this->membership->getAll($_SESSION['branch'], $_SESSION['gym']);
+        $members = $this->member->getAll($_SESSION['branch'], $_SESSION['gym']);
         
         if($id == 0) {
 			$data = ['name' => '','fee' => '','duration' => '','duration_type' => '','description' => '',
@@ -111,9 +119,10 @@ class Subscription extends MY_Controller {
 		} else {
 			$meta_title = $this->lang->line('add');
 		}
-		$meta_title .= ' '.$this->lang->line('membership');
-		$view = $this->load->view('membership_add',['data' => $data, 'id' => $id],true);
-		$this->load->view('layout',['view' => $view, 'meta_title' => $meta_title]);	
+		$meta_title .= ' '.$this->lang->line('subscription');
+		$dynamic_js = "";
+		$view = $this->load->view('subscription_add',['data' => $data,'memberships' => $memberships,'members' => $members ,'id' => $id],true);
+		$this->load->view('layout',['view' => $view, 'dynamic_js' => $dynamic_js, 'meta_title' => $meta_title]);	
 	}
 	
 	function validate_date($str)
