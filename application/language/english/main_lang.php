@@ -75,6 +75,10 @@ $lang['member_id'] = 'Member ID';
 $lang['contact_information'] = 'Contact Information';
 
 $lang['is_required'] = 'is a required field';
+$lang['pay_amount'] = 'Amount To Be Paid';
+$lang['remaining_amount'] = 'Reamining Amount';
+$lang['next_payment'] = 'Next Payment';
+$lang['expires_on'] = 'Expires On';
 
 $lang['max_length'] = 'should not exceed maximum character length of ';
 $lang['invalid_date'] = ' is not a valid date';
@@ -137,13 +141,19 @@ $lang['discount'] = 'Discount Amount';
 $lang['total'] = 'Sub Total';
 
 $lang['other'] = 'Other';
+$lang['other_fee'] = 'Other Fee';
 $lang['tot_to_be_paid'] = 'Total Amount To Be Paid';
 
 $lang['save_next'] = 'Save And Next';
 $lang['request_processing'] = 'Please wait';
+$lang['notes'] = 'Notes';
 
-
+$lang['total_amount'] = 'Total Amount';
 
 $lang['registration_fee_validation'] = 'We dont understand the input for registration fee field. Try using only numbers with a period(.) to indicate cents like 100.50';
 $lang['other_fee_validation'] = 'We dont understand the input for other fee field. Try using only numbers with a period(.) to indicate cents like 100.50';
 $lang['discount_validation'] = 'We dont understand the input for discount field. Try using only numbers with a period(.) to indicate cents like 100.50';
+$lang['subscription_starts'] = 'Subscription Start Date';
+$lang['no_payment_received'] = 'No Payment Received';
+$lang['payment_completed'] = 'Payment Completed';
+$lang['due'] = 'Due';

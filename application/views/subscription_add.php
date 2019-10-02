@@ -1,4 +1,6 @@
 <script src="<?php echo site_url('theme/js/holdon.js'); ?>"></script>
+<script src="<?php echo site_url('theme/js/money.js'); ?>"></script>
+
 <section class="content-header" id="price_app">
   <h1>
 	<?php echo $this->lang->line('subscription'); ?>
@@ -12,9 +14,7 @@
 </section>
 
 <section class="content">
- 
-
-<form method="post" action="<?php echo site_url('add-subscription/'.$id); ?>" onsubmit="return validate();">	
+<form method="post" action="<?php echo site_url('add-subscription/'.$id); ?>" onsubmit="return validate1();">	
 <input type="hidden" name="post_check" value="1" />
 <div class="col-md-12">
 	<?php 
@@ -49,10 +49,11 @@
 	<select name="member_id" id="member_id"  class="form-control">
 		<option value=""><?php echo $this->lang->line('select'); ?></option>
 		<?php 
+		$memeber = set_value('member_id', $data['member_id']);
 		if (count($members) >0) { 
 		foreach ($members as $row => $val) {  
 		?>
-		<option value="<?php echo $val['id']; ?>"><?php echo $val['first_name'].' '.$val['last_name']; ?> [<?php echo $val['member_id']; ?>]</option>
+		<option value="<?php echo $val['id']; ?>" <?php if($val['id'] == $memeber){ ?>  selected <?php } ?> ><?php echo $val['first_name'].' '.$val['last_name']; ?> [<?php echo $val['member_id']; ?>]</option>
 	    <?php }} ?>
 	</select>
 </div>
@@ -63,32 +64,30 @@
                 <select name="membership_id" id="membership_id" onchange="getSubscription(this.value)"  class="form-control">
 				<option value=""><?php echo $this->lang->line('select'); ?></option>
                 <?php 
+                    $memebership =  set_value('membership_id', $data['membership_id']);
                 	if (count($memberships) >0) { 
 					foreach ($memberships as $row => $val) {  
 				   ?>
-               	      <option value="<?php echo $val['id']; ?>"><?php echo $val['name']; ?></option>
+               	      <option value="<?php echo $val['id']; ?>" <?php if($val['id'] == $memebership){ ?> selected <?php } ?> ><?php echo $val['name']; ?></option>
                	  <?php }} ?>
                 </select>
                 </div>
                 
-                <!-- div class="col-md-12">
-               
-               <label><?php echo $this->lang->line('subscription'); ?> <?php echo $this->lang->line('start_date'); ?></label>
-			   <input name="subscription_start" value="" readonly id="subscription_start" type="text" class="form-control dtkk" >
-              </div>
-              <div class="col-md-12">
-               
-               <label><?php echo $this->lang->line('subscription'); ?> <?php echo $this->lang->line('end_date'); ?></label>
-			   <input name="subscription_end" value="" readonly id="subscription_end" type="text" class="form-control dtkk" >
-              </div -->
-             
                 
-                
+                <?php 
+                   $fee = set_value('fee', $data['fee']);
+				   $regfee = set_value('registration_fee', $data['registration_fee']);
+                   $otherfee = set_value('other_fee', $data['other_fee']);
+                   $total = floatval($fee) + floatval($regfee) + floatval($otherfee);
+                   $discount = set_value('discount', $data['discount']);
+                   $pay = floatval($total) - floatval($discount);
+                ?>
+                                            
                 <div class="col-md-12">
 					<hr />
                 <br />
                 <label><?php echo $this->lang->line('membership'); ?> <?php echo $this->lang->line('fee'); ?><span class="text-red">*</span></label>
-                <input name="fee" value="" onkeyUp="processTotal()" id="fee" type="text" class="form-control" placeholder="<?php echo $this->lang->line('membership'); ?> <?php echo $this->lang->line('fee'); ?>">
+                <input name="fee" value="<?php echo $fee; ?>" onkeyUp="processTotal()" id="fee" type="text" class="currency form-control" placeholder="<?php echo $this->lang->line('membership'); ?> <?php echo $this->lang->line('fee'); ?>">
              </div>
              
              
@@ -96,32 +95,45 @@
              
              <div class="col-md-12">
                <label><?php echo $this->lang->line('registration_fee'); ?></label>
-			   <input name="registration_fee" onkeyUp="processTotal()"  value="" id="registration_fee" type="text" class="form-control" placeholder="<?php echo $this->lang->line('registration_fee'); ?>">
+			   <input name="registration_fee" onkeyUp="processTotal()"  value="<?php echo $regfee; ?>" id="registration_fee" type="text" class="currency form-control" placeholder="<?php echo $this->lang->line('registration_fee'); ?>">
               </div>
               
               <div class="col-md-12">
                 <label><?php echo $this->lang->line('other'); ?> <?php echo $this->lang->line('fee'); ?></label>
-                <input name="other_fee" value="" onkeyUp="processTotal()" id="other_fee" type="text" class="form-control" placeholder="<?php echo $this->lang->line('other'); ?> <?php echo $this->lang->line('fee'); ?>">
+                <input name="other_fee" value="<?php echo $otherfee; ?>" onkeyUp="processTotal()" id="other_fee" type="text" class="currency form-control" placeholder="<?php echo $this->lang->line('other'); ?> <?php echo $this->lang->line('fee'); ?>">
                 </div>
                 
                  <div class="col-md-12">
 					 <br />
                 <label><?php echo $this->lang->line('total'); ?>:</label>
-                 <?php echo $this->currency; ?>&nbsp;<span id="sub_total" font-size: 19px;></span>
+                 <?php echo $this->currency; ?>&nbsp;<span id="sub_total" font-size: 19px;><?php echo $total; ?></span>
                  </div>
                 
                 <div class="col-md-12">
                 <label><?php echo $this->lang->line('discount'); ?> </label>
-                <input name="discount" value="" onkeyUp="processTotal()" v-model.number="discount" id="discount" type="text" class="form-control" placeholder="<?php echo $this->lang->line('discount'); ?>">
+                <input name="discount" value="<?php echo $discount; ?>" onkeyUp="processTotal()"  id="discount" type="text" class="currency form-control" placeholder="<?php echo $this->lang->line('discount'); ?>">
                 </div>
                 
                 
                 <div class="col-md-12">
 					 <br />
                 <label><?php echo $this->lang->line('tot_to_be_paid'); ?>:</label>
-                <?php echo $this->currency; ?>&nbsp;<span id="pay_total" style="font-size: 19px;"></span>
+                <?php echo $this->currency; ?>&nbsp;<span id="pay_total" style="font-size: 19px;"><?php echo $pay; ?></span>
                
                 </div>
+                
+                
+                <div class="col-md-12">
+                <label><?php echo $this->lang->line('subscription_starts'); ?> </label>
+                   <input name="start_date" value="<?php echo set_value('start_date', $data['start_date']); ?>" id="start_date" type="text" class="form-control" placeholder="<?php echo $this->lang->line('start_date'); ?>" >
+                </div>
+                
+                 <div class="col-md-12">
+                <label><?php echo $this->lang->line('notes'); ?> </label>
+                   <textarea name="notes" id="notes" class="form-control" placeholder="<?php echo $this->lang->line('notes'); ?>"><?php echo set_value('notes', $data['notes']); ?></textarea>
+                </div>
+                
+                
               
                	<div style="clear:both;"></div>
               </div>
@@ -144,7 +156,7 @@
               <!-- /.form-group -->
               <div class="col-md-12">
               <div class="form-group">
-				  <button type="submit" class="btn btn-primary"><?php echo $this->lang->line('save_next'); ?></button>
+				  <button type="submit" class="btn btn-primary"><?php echo $this->lang->line('submit'); ?></button>
                     </div>
                     </div>
               <!-- /.form-group -->
@@ -162,13 +174,8 @@
           <?php echo $this->lang->line('fields_required'); ?>
         </div>
       </div>
-          <!-- kk -->
-                
-                
-                
-                
-              </div>
-	
+          <!-- kk -->   
+          </div>
 </form>
       <!-- /.box -->
 </section>
@@ -176,61 +183,40 @@
 
 <script type="text/javascript">
 	function validate() {
+		
 		$('#error_notification').html('');
 		$('#error_notification').hide();
 		
-		var name = $('#name').val();
-		var duration = $('#duration').val();
-		var fee = $('#fee').val();
-		var duration_type = $('#duration_type').val();
-		var description = $('#description').val();
-		var status = $('#status').val();
+		var member_id = $('#member_id').val();
+		var membership_id = $('#membership_id').val();
+		var fee = $('#fee').val();		
+		var start_date = $('#start_date').val();
 		
-		$('#name').css('border-bottom','1px solid #d2d6de');
-		$('#duration').css('border-bottom','1px solid #d2d6de');
+		
+		$('#member_id').css('border-bottom','1px solid #d2d6de');
+		$('#membership_id').css('border-bottom','1px solid #d2d6de');
 		$('#fee').css('border-bottom','1px solid #d2d6de');
-		$('#duration_type').css('border-bottom','1px solid #d2d6de');
-		$('#description').css('border-bottom','1px solid #d2d6de');
-		$('#status').css('border-bottom','1px solid #d2d6de');
+		$('#start_date').css('border-bottom','1px solid #d2d6de');
+		
 		
 		var message ='';
-		
-		if (name == '') {
-			$('#name').css('border-bottom','1px solid #dd4b39');
-			message = message + '<?php echo $this->lang->line('name'); ?> <?php echo $this->lang->line('is_required'); ?>';
+		if (member_id == '') {
+			$('#member_id').css('border-bottom','1px solid #dd4b39');
+			message = message + '<?php echo $this->lang->line('member'); ?> <?php echo $this->lang->line('is_required'); ?>';
 		}
-		
-		if (duration == '') {
-			$('#duration').css('border-bottom','1px solid #dd4b39');
-			message = message + '<br /> <?php echo $this->lang->line('duration'); ?> <?php echo $this->lang->line('is_required'); ?>';
+		if (membership_id == '') {
+			$('#membership_id').css('border-bottom','1px solid #dd4b39');
+			message = message + '<br /> <?php echo $this->lang->line('membership'); ?> <?php echo $this->lang->line('is_required'); ?>';
 		}
-		
-		
-		
 		if (fee == '') {
 			$('#fee').css('border-bottom','1px solid #dd4b39');
-			message = message + '<br /> <?php echo $this->lang->line('fee'); ?> <?php echo $this->lang->line('is_required'); ?>';
+			message = message + '<br /> <?php echo $this->lang->line('membership'); ?> <?php echo $this->lang->line('fee'); ?> <?php echo $this->lang->line('is_required'); ?>';
 		}
-		
-
-		
-		if (duration_type == '') {
-			$('#duration_type').css('border-bottom','1px solid #dd4b39');
-			message = message + '<br /> <?php echo $this->lang->line('duration_type'); ?> <?php echo $this->lang->line('is_required'); ?>';
+		if (start_date == '') {
+			$('#start_date').css('border-bottom','1px solid #dd4b39');
+			message = message + '<br /> <?php echo $this->lang->line('subscription'); ?> <?php echo $this->lang->line('start_date'); ?> <?php echo $this->lang->line('is_required'); ?>';
 		}
-		
-		if (description == '') {
-			$('#description').css('border-bottom','1px solid #dd4b39');
-			message = message + '<br /> <?php echo $this->lang->line('description'); ?> <?php echo $this->lang->line('is_required'); ?>';
-		}
-		
-		if (status == '') {
-			$('#status').css('border-bottom','1px solid #dd4b39');
-			message = message + '<br /> <?php echo $this->lang->line('status'); ?> <?php echo $this->lang->line('is_required'); ?>';
-		}
-		
 		if(message !="") {
-			$('#ta1').trigger('click');
 			$('#error_notification').html(message);
 			$('#error_notification').show();
 			return false;
@@ -259,7 +245,7 @@
 	
 	
 	
-	function processTotal() {
+function processTotal() {
 
 $('#error_notification').html('');
 $('#error_notification').hide();
@@ -323,13 +309,12 @@ if(message !="") {
 }
 	
 }
-	
-	
 	$(function () {
-		$('.dtkk').datepicker({
+		$('#start_date').datepicker({
 		  autoclose: true,
 		  format: 'd/mm/yyyy'
 		});
+		$('.currency').maskMoney({thousands:'', decimal:'.', allowZero:true, suffix: ''});
 	});
 	
 </script>

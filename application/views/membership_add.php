@@ -1,3 +1,5 @@
+<script src="<?php echo site_url('theme/js/money.js'); ?>"></script>
+
 <section class="content-header">
   <h1>
 	<?php echo $this->lang->line('membership'); ?>
@@ -56,7 +58,7 @@
               <div class="form-group">
 				  
                 <label><?php echo $this->lang->line('fee'); ?><span class="text-red">*</span></label>
-                <input name="fee" value="<?php echo set_value('fee', $data['fee']); ?>" id="fee" type="text" class="form-control" placeholder="<?php echo $this->lang->line('fee'); ?>">
+                <input name="fee" value="<?php echo set_value('fee', $data['fee']); ?>" id="fee" type="text" class="currency form-control" placeholder="<?php echo $this->lang->line('fee'); ?>">
                 
                     </div>
               <!-- /.form-group -->
@@ -66,9 +68,6 @@
               <select name="duration_type" id="duration_type"  class="form-control">
                	  <option value=""><?php echo $this->lang->line('select'); ?></option>
                	  <option <?php if ($duration_select == 'day') { ?> selected <?php } ?> value="day"><?php echo $this->lang->line('day'); ?></option>
-               	 
-               	  <option <?php if ($duration_select == 'week') { ?> selected <?php } ?> value="week"><?php echo $this->lang->line('week'); ?></option>
-               	 
                	  <option <?php if ($duration_select == 'month') { ?> selected <?php } ?> value="month"><?php echo $this->lang->line('month'); ?></option>
                	  <option <?php if ($duration_select == 'year') { ?> selected <?php } ?> value="year"><?php echo $this->lang->line('year'); ?></option>
                	</select>
@@ -224,5 +223,9 @@
 			return true;
 		}
 	}
+	
+	$(function () {
+		$('.currency').maskMoney({thousands:'', decimal:'.', allowZero:true, suffix: ''});
+	});
 	
 </script>

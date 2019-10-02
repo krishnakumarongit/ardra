@@ -22,18 +22,24 @@ class Subscription extends MY_Controller {
         $this->load->model('Membership_model','membership');
         $this->load->model('Member_model','member');
         
-        
-        
-        
+        $this->load->model('Subscription_model','subscription');
         
         $memberships = $this->membership->getAll($_SESSION['branch'], $_SESSION['gym']);
         $members = $this->member->getAll($_SESSION['branch'], $_SESSION['gym']);
         
         if($id == 0) {
-			$data = ['name' => '','fee' => '','duration' => '','duration_type' => '','description' => '',
-			'status' => '','created_at' => ''];
+			$data = ['member_id' => '',
+					'membership_id' => '',
+					'member_name' => '',
+					'membership_name' => '',
+					'fee' => '',
+					'registration_fee' => '',
+					'other_fee' => '',
+					'discount' => '',
+					'start_date' => '',
+					'notes' => ''];
 	    } else {
-			$result = $this->membership->getMembership($id, $_SESSION['branch'], $_SESSION['gym']);
+			$result = $this->subscription->getSubscription($id, $_SESSION['branch'], $_SESSION['gym']);
 			if ($result['status'] == 0) {
 				die('you are not authorised to access this link');
 			} else {
@@ -43,74 +49,111 @@ class Subscription extends MY_Controller {
         
 		if ($this->input->post('post_check',0)) {
 			
-			if ($id == 0) {
-				$this->form_validation->set_rules('name', $this->lang->line('name'), 'trim|required|max_length[25]|callback_brach_unique',
-						array('required' => $this->lang->line('name').' '.$this->lang->line('is_required'),
-						'brach_unique' => $this->lang->line('name').' '.$this->lang->line('id_unique'),
-						'max_length' => ' %s '.$this->lang->line('max_length').' %s'),
-				);
-		    } else {
-			  if ($data['name'] != $this->input->post('name')) {
-				  $this->form_validation->set_rules('name', $this->lang->line('name'), 'trim|required|max_length[25]|callback_brach_unique',
-						array('required' => $this->lang->line('name').' '.$this->lang->line('is_required'),
-						'brach_unique' => $this->lang->line('name').' '.$this->lang->line('id_unique'),
-						'max_length' => ' %s '.$this->lang->line('max_length').' %s'),
-				);
-			  }		
-			}
-            $this->form_validation->set_rules('duration', $this->lang->line('duration'), 'trim|required|max_length[5]|is_natural_no_zero',
-					array('required' => $this->lang->line('duration').' '.$this->lang->line('duration'),
-					'max_length' => ' %s '.$this->lang->line('max_length').' %s',
-			     	'is_natural_no_zero' => $this->lang->line('duration_validation')),
+			$this->form_validation->set_rules('member_id', $this->lang->line('member'), 'trim|required',
+					array('required' => $this->lang->line('member').' '.$this->lang->line('is_required'))
             );
-            $this->form_validation->set_rules('fee', $this->lang->line('fee'), 'trim|required|max_length[15]|callback_currency',
+            
+            $this->form_validation->set_rules('membership_id', $this->lang->line('membership'), 'trim|required',
+					array('required' => $this->lang->line('membership').' '.$this->lang->line('is_required')),
+            );
+            $this->form_validation->set_rules('fee', $this->lang->line('membership'). " ".$this->lang->line('fee'), 'trim|required|max_length[15]|callback_currency',
 					array('required' => $this->lang->line('fee').' '.$this->lang->line('is_required'),
 					'currency' => $this->lang->line('fee_validation'),
-					'max_length' => $this->lang->line('fee').' '.$this->lang->line('max_length')),
-            );
-            
-            $this->form_validation->set_rules('duration_type', $this->lang->line('duration_type'), 'trim|required|max_length[12]',
-					array('required' => $this->lang->line('duration_type').' '.$this->lang->line('is_required'),
-					'max_length' => ' %s '.$this->lang->line('max_length').' %s '),
-            );
-            
-            if ($id == 0) {
-                $this->form_validation->set_rules('description', $this->lang->line('description'), 'trim|required|max_length[1000]',
-						array('required' => $this->lang->line('description').' '.$this->lang->line('is_required'),
-						'max_length' => $this->lang->line('description').' '.$this->lang->line('max_length').' %s'),
-						
+					'max_length' => $this->lang->line('membership')." ".$this->lang->line('fee').' '.$this->lang->line('max_length')),
+            );         
+            if ($this->input->post('registration_fee','') !="") {
+				$this->form_validation->set_rules('registration_fee', $this->lang->line('registration_fee'), 'trim|required|max_length[15]|callback_currency',
+						array('required' => $this->lang->line('fee').' '.$this->lang->line('is_required'),
+						'currency' => $this->lang->line('registration_fee_validation'),
+						'max_length' => $this->lang->line('registration_fee').' '.$this->lang->line('max_length')),
 				);
-			} else {
-				if ($this->input->post('status') !=  $data['status']) {
-					$this->form_validation->set_rules('status', $this->lang->line('member_id'), 'trim|required|max_length[10]',
-						array('required' => $this->lang->line('status').' '.$this->lang->line('is_required'),
-						'max_length' => $this->lang->line('status').' '.$this->lang->line('max_length').' %s'),	
-				    );	
-				}
+			}
+            if ($this->input->post('other_fee','') !="") {
+				$this->form_validation->set_rules('other_fee', $this->lang->line('other_fee'), 'trim|required|max_length[15]|callback_currency',
+						array('required' => $this->lang->line('fee').' '.$this->lang->line('is_required'),
+						'currency' => $this->lang->line('other_fee_validation'),
+						'max_length' => $this->lang->line('other_fee').' '.$this->lang->line('max_length')),
+				);
+		    }
+            if ($this->input->post('discount','') !="") {
+				$this->form_validation->set_rules('discount', $this->lang->line('discount'), 'trim|required|max_length[15]|callback_currency',
+						array('required' => $this->lang->line('discount').' '.$this->lang->line('is_required'),
+						'currency' => $this->lang->line('discount_validation'),
+						'max_length' => $this->lang->line('other_fee').' '.$this->lang->line('max_length')),
+				);
 			}
             
-           
-			
-			if (!($this->form_validation->run() == FALSE))
+            
+            $this->form_validation->set_rules('start_date', $this->lang->line('start_date'), 'trim|required|max_length[15]|callback_validate_date',
+						array('required' => $this->lang->line('start_date').' '.$this->lang->line('is_required'),
+						'validate_date' => $this->lang->line('start_date').' '.$this->lang->line('invalid_date'),
+						'max_length' => $this->lang->line('start_date').' '.$this->lang->line('max_length')),
+		    );
+            
+						
+            
+           	if (!($this->form_validation->run() == FALSE))
             {
-				$data = ['name' => $this->input->post('name'),
-					'fee' => $this->input->post('fee'),
-					'duration' => $this->input->post('duration'),
-					'duration_type' => $this->input->post('duration_type'),
-					'description' => $this->input->post('description'),
-					'status' => $this->input->post('status'),
+				
+				$fee = floatval($this->input->post('fee','0.00'));
+				$reg_fee = floatval($this->input->post('registration_fee','0.00'));
+				$other_fee = floatval($this->input->post('other_fee','0.00'));
+				$discount = floatval($this->input->post('discount','0.00'));
+				
+				$total = $fee + $reg_fee + $other_fee;
+				
+				if ($total > $discount) {
+					$payamount = $total - $discount;
+				} else {
+					$payamount = 0;
+				}
+				
+				//get membership name
+				$membershipname =  '';
+				$membership_name = $this->membership->getMembership($this->input->post('membership_id'), $_SESSION['branch'], $_SESSION['gym']);
+				if ( isset($membership_name['status']) && $membership_name['status'] == 1) {
+					$membershipname = $membership_name['data']['name'];
+				} else {
+					die('you are not authorised to access this link');
+				}
+				//get member name
+				$membername = '';
+				$member_name = $this->member->getMember($this->input->post('member_id'), $_SESSION['branch'], $_SESSION['gym']);
+				if ( isset($member_name['status']) && $member_name['status'] == 1) {
+					$membername = $member_name['data']['first_name'].' '.$member_name['data']['last_name'];
+				} else {
+					die('you are not authorised to access this link');
+				}
+				
+				$data = ['member_id' => $this->input->post('member_id'),
+					'membership_id' => $this->input->post('membership_id'),
+					'member_name' => $membername,
+					'membership_name' => $membershipname,
+					'fee' => $fee,
+					'registration_fee' => $reg_fee,
+					'other_fee' => $other_fee,
+					'total' => $total,
+					'discount' => $discount,
+					'amount_to_paid' => $payamount,
+					'amount_due' => $payamount,
+					'start_date' => $this->formatDate($this->input->post('start_date')),
+					'end_date' => date('Y-m-d', strtotime("+".$membership_name['data']['duration']." ".$membership_name['data']['duration_type'], strtotime($this->formatDate($this->input->post('start_date'))))),
+					'notes' => $this->input->post('notes'),
 					'gym' => $_SESSION['gym'],
 					'branch' => $_SESSION['branch']		
 				];	
+							
 				if ($id == 0) {
 					$data['created_at'] = date('Y-m-d H:i:s');
-					$_SESSION['success'] = $this->lang->line('membership').' '.$this->lang->line('add_success');	
-					$this->membership->insert($data);
+					$data['status'] = 'active';
+					$data['next_payment'] = 'no_payment_received';
+					$_SESSION['success'] = $this->lang->line('subscription').' '.$this->lang->line('add_success');	
+					$this->subscription->insert($data);
 				} else {
-					$this->membership->update($data, $id);
-					$_SESSION['success'] = $this->lang->line('membership').' '.$this->lang->line('update_success');	
+					$this->subscription->update($data, $id);
+					$_SESSION['success'] = $this->lang->line('subscription').' '.$this->lang->line('update_success');	
 				}
-				redirect(site_url('list-memberships'));
+				redirect(site_url('list-subscriptions'));
 			}   
 		}
 		
@@ -167,12 +210,17 @@ class Subscription extends MY_Controller {
 	
 	function list()
 	{
+		
+		$this->load->model('Membership_model','membership');
+        $this->load->model('Member_model','member');
+		$memberships = $this->membership->getAll($_SESSION['branch'], $_SESSION['gym']);
+        $members = $this->member->getAll($_SESSION['branch'], $_SESSION['gym']);
 		$this->subscription_list_menu = 'active';
 		$this->load->library("pagination");
-		$this->load->model('Membership_model','membership');
+		$this->load->model('Subscription_model','subscription');
 		$config = array();
-        $config["base_url"] = site_url('list-memberships');
-        $config["total_rows"] = $this->membership->get_count($_GET, $_SESSION['branch'], $_SESSION['gym']);
+        $config["base_url"] = site_url('list-subscriptions');
+        $config["total_rows"] = $this->subscription->get_count($_GET, $_SESSION['branch'], $_SESSION['gym']);
         $config["per_page"] = PAGE_COUNT;
         $config["uri_segment"] = PAGE_SEGMENT;
         $config['reuse_query_string'] = true;
@@ -193,9 +241,9 @@ class Subscription extends MY_Controller {
         $this->pagination->initialize($config);
         $page = ($this->uri->segment(PAGE_SEGMENT)) ? $this->uri->segment(PAGE_SEGMENT) : 0;
         $data['links'] = $this->pagination->create_links();
-        $data['memebrs'] = $this->membership->getMemberships($config["per_page"], $page, $_GET, $_SESSION['branch'], $_SESSION['gym']);
-		$view = $this->load->view('membership_list',['data' => $data, 'total' => $config["total_rows"]],true);
-		$this->load->view('layout',['view' => $view, 'meta_title' => $this->lang->line('memberships')]);		
+        $data['subscriptions'] = $this->subscription->getSubscriptions($config["per_page"], $page, $_GET, $_SESSION['branch'], $_SESSION['gym']);
+		$view = $this->load->view('subscription_list',['data' => $data,'members' => $members, 'memberships' => $memberships,'total' => $config["total_rows"]],true);
+		$this->load->view('layout',['view' => $view, 'meta_title' => $this->lang->line('subscriptions')]);		
 	}
 	
     
