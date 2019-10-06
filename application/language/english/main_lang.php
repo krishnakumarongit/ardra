@@ -154,6 +154,7 @@ $lang['registration_fee_validation'] = 'We dont understand the input for registr
 $lang['other_fee_validation'] = 'We dont understand the input for other fee field. Try using only numbers with a period(.) to indicate cents like 100.50';
 $lang['discount_validation'] = 'We dont understand the input for discount field. Try using only numbers with a period(.) to indicate cents like 100.50';
 $lang['subscription_starts'] = 'Subscription Start Date';
+$lang['subscription_ends'] = 'Subscription End Date';
 $lang['no_payment_received'] = 'No Payment Received';
 $lang['payment_completed'] = 'Payment Completed';
 $lang['due'] = 'Due';

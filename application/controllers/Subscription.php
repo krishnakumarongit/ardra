@@ -89,10 +89,17 @@ class Subscription extends MY_Controller {
 						'validate_date' => $this->lang->line('start_date').' '.$this->lang->line('invalid_date'),
 						'max_length' => $this->lang->line('start_date').' '.$this->lang->line('max_length')),
 		    );
+		    
+		    if(intval($id) > 0) {
+				$this->form_validation->set_rules('end_date', $this->lang->line('end_date'), 'trim|required|max_length[15]|callback_validate_date',
+							array('required' => $this->lang->line('end_date').' '.$this->lang->line('is_required'),
+							'validate_date' => $this->lang->line('end_date').' '.$this->lang->line('invalid_date'),
+							'max_length' => $this->lang->line('end_date').' '.$this->lang->line('max_length')),
+				);		    
+		    }
             
 						
-            
-           	if (!($this->form_validation->run() == FALSE))
+            if (!($this->form_validation->run() == FALSE))
             {
 				
 				$fee = floatval($this->input->post('fee','0.00'));
@@ -125,6 +132,13 @@ class Subscription extends MY_Controller {
 					die('you are not authorised to access this link');
 				}
 				
+				
+				if ($id > 0 ) {
+					$edate = $this->formatDate($this->input->post('end_date'));
+			    } else {
+					$edate = date('Y-m-d', strtotime("+".$membership_name['data']['duration']." ".$membership_name['data']['duration_type'], strtotime($this->formatDate($this->input->post('start_date')))));
+				}
+				
 				$data = ['member_id' => $this->input->post('member_id'),
 					'membership_id' => $this->input->post('membership_id'),
 					'member_name' => $membername,
@@ -137,7 +151,7 @@ class Subscription extends MY_Controller {
 					'amount_to_paid' => $payamount,
 					'amount_due' => $payamount,
 					'start_date' => $this->formatDate($this->input->post('start_date')),
-					'end_date' => date('Y-m-d', strtotime("+".$membership_name['data']['duration']." ".$membership_name['data']['duration_type'], strtotime($this->formatDate($this->input->post('start_date'))))),
+					'end_date' => $edate,
 					'notes' => $this->input->post('notes'),
 					'gym' => $_SESSION['gym'],
 					'branch' => $_SESSION['branch']		
@@ -215,6 +229,7 @@ class Subscription extends MY_Controller {
         $this->load->model('Member_model','member');
 		$memberships = $this->membership->getAll($_SESSION['branch'], $_SESSION['gym']);
         $members = $this->member->getAll($_SESSION['branch'], $_SESSION['gym']);
+        
 		$this->subscription_list_menu = 'active';
 		$this->load->library("pagination");
 		$this->load->model('Subscription_model','subscription');
@@ -252,7 +267,6 @@ class Subscription extends MY_Controller {
 		$test_date = $str;
 		$test_arr  = explode('/', $test_date);
         return $test_arr[2].'-'.$test_arr[1].'-'.$test_arr[0];
-		
 	}
 	
 	function delete($id) {
@@ -264,17 +278,18 @@ class Subscription extends MY_Controller {
 	}
 	
 	function view($id) {
-		$this->load->model('Membership_model','membership');
-		$result = $this->membership->getMembership($id, $_SESSION['branch'], $_SESSION['gym']);
+		$this->load->model('Subscription_model','subscription');
+		$result = $this->subscription->getSubscription($id, $_SESSION['branch'], $_SESSION['gym']);
 		if ($result['status'] == 0) {
 			die('you are not authorised to access this link');
 		} else {
 			$data = $result['data'];
 		}
 		
-		$meta_title = $this->lang->line('view').' '.$this->lang->line('membership');
-		$view = $this->load->view('membership_view', ['data' => $data, 'id' => $id], true);
+		$meta_title = $this->lang->line('view').' '.$this->lang->line('subscription');
+		$view = $this->load->view('subscription_view', ['data' => $data, 'id' => $id], true);
 		$this->load->view('layout',['view' => $view, 'meta_title' => $meta_title]);	
+	
 	}
 
 

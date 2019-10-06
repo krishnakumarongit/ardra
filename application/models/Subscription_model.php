@@ -33,7 +33,6 @@ class Subscription_model extends CI_Model {
 			$this->db->where('gym', $gym_id);
 			$this->db->where('branch', $branch_id);
 			$this->db->where('status', 'active');
-			
 			$q = $this->db->get('subscriptions');
 			$data = $q->result_array();
             return $data;

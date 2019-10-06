@@ -149,15 +149,15 @@
                     <?php echo date('M d, Y',strtotime($row->end_date)); ?>
                   </td>
                   <td style="text-align:center;">				
-					  <a title="<?php echo $this->lang->line('view'); ?>" href="<?php echo site_url('view-membership/'.$row->id); ?>">
+					  <a title="<?php echo $this->lang->line('view'); ?>" href="<?php echo site_url('view-subscription/'.$row->id); ?>">
 					  <button type="button" class="btn btn-success btn-sm" ><i class="fa fa-eye"></i>
                 </button></a>
                 
-                 <a title="<?php echo $this->lang->line('edit'); ?>" href="<?php echo site_url('add-membership/'.$row->id); ?>">
+                 <a title="<?php echo $this->lang->line('edit'); ?>" href="<?php echo site_url('add-subscription/'.$row->id); ?>">
 					  <button type="button" class="btn btn-primary btn-sm" ><i class="fa fa-pencil"></i>
                 </button>
                 
- <a title="<?php echo $this->lang->line('delete'); ?>" onclick="return confirm('<?php echo $this->lang->line('delete_confirm'); ?>');" href="<?php echo site_url('delete-membership/'.$row->id); ?>">
+ <a title="<?php echo $this->lang->line('delete'); ?>" onclick="return confirm('<?php echo $this->lang->line('delete_confirm'); ?>');" href="<?php echo site_url('delete-subscription/'.$row->id); ?>">
 					  <button type="button" class="btn btn-danger btn-sm" ><i class="fa fa-trash"></i>
                 </button></a>
                 

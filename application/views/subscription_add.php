@@ -42,9 +42,16 @@
           
           <div class="row">
             <div class="col-md-6">
-              <div class="form-group">
+<div class="form-group">
 				  
+<?php if ($id > 0) { ?>				  
 <div class="col-md-12">
+	<div class="callout callout-info" style="margin-bottom:0px;">
+		<p><?php echo ucwords($data['member_name']); ?></p><p><?php echo ucwords($data['membership_name']); ?></p>
+	</div>
+</div>
+<?php } ?>
+<div class="col-md-12" <?php if($id > 0) { ?> style="display:none;"<?php } ?> >
 	<label><?php echo $this->lang->line('member'); ?><span class="text-red">*</span></label>
 	<select name="member_id" id="member_id"  class="form-control">
 		<option value=""><?php echo $this->lang->line('select'); ?></option>
@@ -58,7 +65,7 @@
 	</select>
 </div>
 				  
-				  <div class="col-md-12">
+				  <div class="col-md-12" <?php if($id > 0) { ?> style="display:none;"<?php } ?> >
 			    <label><?php echo $this->lang->line('membership'); ?><span class="text-red">*</span></label>
                 
                 <select name="membership_id" id="membership_id" onchange="getSubscription(this.value)"  class="form-control">
@@ -124,9 +131,30 @@
                 
                 
                 <div class="col-md-12">
-                <label><?php echo $this->lang->line('subscription_starts'); ?> </label>
-                   <input name="start_date" value="<?php echo set_value('start_date', $data['start_date']); ?>" id="start_date" type="text" class="form-control" placeholder="<?php echo $this->lang->line('start_date'); ?>" >
+                <label><?php echo $this->lang->line('subscription_starts'); 
+                
+                $sdate = '';
+                
+                if($data['start_date'] != "") {
+					$sdate = date('d/m/Y', strtotime($data['start_date']));
+				}
+                
+                ?> </label>
+                   <input name="start_date" readonly value="<?php echo set_value('start_date', $sdate); ?>" id="start_date" type="text" class="form-control" placeholder="<?php echo $this->lang->line('start_date'); ?>" >
                 </div>
+                
+                <?php if($id > 0){ ?>
+                <div class="col-md-12">
+                <label><?php echo $this->lang->line('subscription_ends'); 
+                 
+                $edate = '';
+                if($data['end_date'] != "") {
+					$edate = date('d/m/Y', strtotime($data['end_date']));
+				}
+				?> </label>
+                   <input name="end_date" readonly value="<?php echo set_value('end_date', $edate); ?>" id="end_date" type="text" class="form-control" placeholder="<?php echo $this->lang->line('end_date'); ?>" >
+                </div>
+                <?php } ?>
                 
                  <div class="col-md-12">
                 <label><?php echo $this->lang->line('notes'); ?> </label>
@@ -191,8 +219,10 @@
 		var membership_id = $('#membership_id').val();
 		var fee = $('#fee').val();		
 		var start_date = $('#start_date').val();
-		
-		
+		<?php if($id > 0){ ?>
+		  var end_date = $('#end_date').val();
+		  $('#end_date').css('border-bottom','1px solid #d2d6de');
+		<?php } ?>
 		$('#member_id').css('border-bottom','1px solid #d2d6de');
 		$('#membership_id').css('border-bottom','1px solid #d2d6de');
 		$('#fee').css('border-bottom','1px solid #d2d6de');
@@ -212,10 +242,19 @@
 			$('#fee').css('border-bottom','1px solid #dd4b39');
 			message = message + '<br /> <?php echo $this->lang->line('membership'); ?> <?php echo $this->lang->line('fee'); ?> <?php echo $this->lang->line('is_required'); ?>';
 		}
+		
+		
 		if (start_date == '') {
 			$('#start_date').css('border-bottom','1px solid #dd4b39');
 			message = message + '<br /> <?php echo $this->lang->line('subscription'); ?> <?php echo $this->lang->line('start_date'); ?> <?php echo $this->lang->line('is_required'); ?>';
 		}
+		
+		<?php if($id > 0){ ?>
+		if (end_date == '') {
+			$('#end_date').css('border-bottom','1px solid #dd4b39');
+			message = message + '<br /> <?php echo $this->lang->line('subscription'); ?> <?php echo $this->lang->line('end_date'); ?> <?php echo $this->lang->line('is_required'); ?>';
+		}
+		<?php } ?>
 		if(message !="") {
 			$('#error_notification').html(message);
 			$('#error_notification').show();
@@ -311,6 +350,10 @@ if(message !="") {
 }
 	$(function () {
 		$('#start_date').datepicker({
+		  autoclose: true,
+		  format: 'd/mm/yyyy'
+		});
+		$('#end_date').datepicker({
 		  autoclose: true,
 		  format: 'd/mm/yyyy'
 		});
