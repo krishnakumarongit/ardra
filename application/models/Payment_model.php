@@ -1,17 +1,19 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Subscription_model extends CI_Model {
+class Payment_model extends CI_Model {
 
         public function insert($data)
         {
-            $this->db->insert('subscriptions', $data);
+            $this->db->insert('payments', $data);
         }
         
         public function update($data, $id)
         {
+			$this->db->where('gym', $gym);
+			$this->db->where('branch', $branch);
 			$this->db->where('id', $id);
-            $this->db->update('subscriptions', $data);
+            $this->db->update('payments', $data);
         }
         
         public function getSubscription($id, $branch_id, $gym_id)
@@ -19,7 +21,7 @@ class Subscription_model extends CI_Model {
 			$this->db->where('id', $id);
 			$this->db->where('gym', $gym_id);
 			$this->db->where('branch', $branch_id);
-			$q = $this->db->get('subscriptions');
+			$q = $this->db->get('payments');
 			$data = $q->result_array();
             if (isset($data[0]) && count($data[0]) > 0) {
 				return ['status' => 1, 'data' => $data[0]];
@@ -28,28 +30,12 @@ class Subscription_model extends CI_Model {
 			}
         }
         
-        
-        public function getSubscriptionByMember($id, $branch_id, $gym_id) {
-		    $this->db->where('member_id', $id);
-		    $this->db->where('further_payment_required', 'Yes');
-			$this->db->where('gym', $gym_id);
-			$this->db->where('branch', $branch_id);
-			$q = $this->db->get('subscriptions');
-			$data = $q->result_array();
-            if (isset($data[0]) && count($data[0]) > 0) {
-				return ['status' => 1, 'data' => $data];
-			} else {
-				return ['status' => 0];
-			}
-		
-		}
-        
         public function getAll($branch_id, $gym_id)
         {
 			$this->db->where('gym', $gym_id);
 			$this->db->where('branch', $branch_id);
 			$this->db->where('status', 'active');
-			$q = $this->db->get('subscriptions');
+			$q = $this->db->get('payments');
 			$data = $q->result_array();
             return $data;
         }
@@ -60,7 +46,7 @@ class Subscription_model extends CI_Model {
 			$this->db->where('name', $id);
 			$this->db->where('gym', $gym_id);
 			$this->db->where('branch', $branch_id);
-			$q = $this->db->get('subscriptions');
+			$q = $this->db->get('payments');
 			$data = $q->result_array();
             if (isset($data[0]) && count($data[0]) > 0) {
 				return ['status' => 1, 'data' => $data[0]];
@@ -85,7 +71,7 @@ class Subscription_model extends CI_Model {
 				$where .= ' and next_payment ="'.$get['status'].'" ';
 			 }
 			 
-             $query = $this->db->query('select * from subscriptions WHERE '.$where.' LIMIT '.$start.','.$limit);
+             $query = $this->db->query('select * from payments WHERE '.$where.' LIMIT '.$start.','.$limit);
              return $query->result();		
 		}
 		
@@ -104,7 +90,7 @@ class Subscription_model extends CI_Model {
 				$where .= ' and next_payment ="'.$get['status'].'" ';
 			 }
 			 
-			 $query = $this->db->query('select * from subscriptions WHERE '.$where);
+			 $query = $this->db->query('select * from payments WHERE '.$where);
 			 return $query->num_rows();
             
         } 
@@ -113,7 +99,7 @@ class Subscription_model extends CI_Model {
 			$this->db->where('gym', $gym);
 			$this->db->where('branch', $branch);
 			$this->db->where('id', $id);
-			$this->db->delete('subscriptions');
+			$this->db->delete('payments');
 		}
 
 }

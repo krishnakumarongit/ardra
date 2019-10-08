@@ -41,7 +41,7 @@
 </tr>
 
 <tr>
-<td><?php echo $this->lang->line('total'); ?> <?php echo $this->lang->line('fee'); ?></td>
+<td><?php echo $this->lang->line('total'); ?></td>
 <td><?php echo $this->currency; ?> <?php echo $data['total']; ?></td>
 </tr>
 

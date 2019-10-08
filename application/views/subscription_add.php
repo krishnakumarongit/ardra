@@ -14,7 +14,7 @@
 </section>
 
 <section class="content">
-<form method="post" action="<?php echo site_url('add-subscription/'.$id); ?>" onsubmit="return validate1();">	
+<form method="post" action="<?php echo site_url('add-subscription/'.$id); ?>" onsubmit="return validate();">	
 <input type="hidden" name="post_check" value="1" />
 <div class="col-md-12">
 	<?php 
