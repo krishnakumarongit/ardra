@@ -26,11 +26,11 @@ class Payment extends MY_Controller {
         
         $memberships = $this->membership->getAll($_SESSION['branch'], $_SESSION['gym']);
         $members = $this->member->getAll($_SESSION['branch'], $_SESSION['gym']);
-        
+        $subs_drop = '';
         
         if($id == 0) {
-			$data = ['subscription' => '','user' => '', 'amount' => '','duration_type' => '','source' => '',
-			'note' => '', 'created_at' => '', 'more_payment' => '','next_payment' => '', 'payment_date' => '', 'transaction_id' => ''];
+			$data = ['subscription' => '','user' => '','balance' => 0,'amount' => '0.00','duration_type' => '','payment_source' => '',
+			'note' => '', 'created_at' => '', 'remaining_amount' => '0.00','payment_required' => '','more_payment' => '','next_payment' => '', 'payment_date' => '', 'transaction_id' => ''];
 	    } else {
 			$result = $this->payment->getPayment($id, $_SESSION['branch'], $_SESSION['gym']);
 			if ($result['status'] == 0) {
@@ -55,8 +55,8 @@ class Payment extends MY_Controller {
 					'max_length' => $this->lang->line('payment_amount').' '.$this->lang->line('max_length')),
             );    
                  
-            if ($this->input->post('source','') !="") {
-				$this->form_validation->set_rules('source', $this->lang->line('source'), 'trim|required',
+            if ($this->input->post('payment_source','') !="") {
+				$this->form_validation->set_rules('payment_source', $this->lang->line('source'), 'trim|required',
 						array('required' => $this->lang->line('source').' '.$this->lang->line('is_required'),
 						'max_length' => $this->lang->line('source').' '.$this->lang->line('max_length')),
 				);
@@ -81,15 +81,34 @@ class Payment extends MY_Controller {
 						'max_length' => $this->lang->line('payment_date').' '.$this->lang->line('max_length')),
 		    );
 		    
-		    $this->form_validation->set_rules('next_payment', $this->lang->line('next_payment'), 'trim|required|max_length[15]|callback_validate_date',
-						array('required' => $this->lang->line('next_payment').' '.$this->lang->line('is_required'),
-						'validate_date' => $this->lang->line('next_payment').' '.$this->lang->line('invalid_date'),
-						'max_length' => $this->lang->line('next_payment').' '.$this->lang->line('max_length')),
-		    );
+		    if ($this->input->post('payment_required','no') == 'yes') {
+				$this->form_validation->set_rules('next_payment', $this->lang->line('next_payment'), 'trim|required|max_length[15]|callback_validate_date',
+							array('required' => $this->lang->line('next_payment').' '.$this->lang->line('is_required'),
+							'validate_date' => $this->lang->line('next_payment').' '.$this->lang->line('invalid_date'),
+							'max_length' => $this->lang->line('next_payment').' '.$this->lang->line('max_length')),
+				);
+			}
 		    
 		    
-		    
-            
+		    if ($this->input->post('member_id',0) > 0) {
+				$sub_data = $this->viewsubscription($this->input->post('member_id',0),1);
+				$sel_id = $this->input->post('subscription',0);
+				if ($sub_data['status'] == 1) {
+					$result_option = '';
+					if (count($sub_data['data']) > 0) {
+						foreach ($sub_data['data'] as $row => $val) {
+							if ($sel_id == $val['id']) {
+								$chk = 'selected';
+							} else {
+								$chk = '';
+							}
+							$result_option .= '<option '.$chk.' value="'.$val['id'].'">'.$val['membership_name'].' '.$this->lang->line('subscribed_on').' ['.date("d/M/Y", strtotime($val['start_date'])).']</option>';
+						}
+					}
+					$subs_drop = $result_option;
+				}
+			}
+			
 						
             if (!($this->form_validation->run() == FALSE))
             {
@@ -170,10 +189,25 @@ class Payment extends MY_Controller {
 		}
 		
 		$meta_title .= ' '.$this->lang->line('payment');
-		$view = $this->load->view('payment_add',['data' => $data,'memberships' => $memberships,'members' => $members ,'id' => $id],true);
+		$view = $this->load->view('payment_add',['data' => $data,'subdrop' => $subs_drop,'memberships' => $memberships,'members' => $members ,'id' => $id],true);
 		$this->load->view('layout',['view' => $view, 'meta_title' => $meta_title]);	
 		
 	}
+	
+	
+	
+	function format_date($str)
+	{
+
+		$test_date = $str;
+		$test_arr  = explode('/', $test_date);
+		if (count($test_arr) == 3) {
+			return $test_arr[2].'-'.$test_arr[2].'-'.$test_arr[0];
+		} else {
+		   return '';
+		}
+	}
+	
 	
 	function validate_date($str)
 	{
@@ -196,7 +230,11 @@ class Payment extends MY_Controller {
 		if(!preg_match('/^\d+(\.\d{1,2})?$/',$str)){
 			return FALSE;
 		} else {
-		    return TRUE;
+			if ($str == '0.00') {
+				return FALSE;
+			} else {
+				return TRUE;
+			}
 		}
 	}
 	
@@ -279,7 +317,7 @@ class Payment extends MY_Controller {
 		$this->load->view('layout',['view' => $view, 'meta_title' => $meta_title]);	
 	}
 	
-	function viewsubscription($id) {
+	function viewsubscription($id, $internal ='') {
 		$data = array();
 		$this->load->model('Subscription_model','subscripion');
 		$result = $this->subscripion->getSubscriptionByMember($id, $_SESSION['branch'], $_SESSION['gym']);
@@ -294,8 +332,12 @@ class Payment extends MY_Controller {
 		    }
 			$data = array('status'=> 1, 'data' => $result_option);
 		}
-		echo json_encode($data);
-		exit;
+		if ($internal == 1) {
+			return $result;
+		} else {
+			echo json_encode($data);
+			exit;
+		}
 	}
 	
 	function balanceSubscription($id) {
