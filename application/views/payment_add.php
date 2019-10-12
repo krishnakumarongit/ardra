@@ -46,8 +46,16 @@
 <div class="col-md-6">
 <div class="form-group">
 <div class="col-md-12">
-	<label><?php echo $this->lang->line('member'); ?><span class="text-red">*</span></label>
-	<select name="member_id" id="member_id" onchange="getSubscription(this.value)"   class="form-control">
+	<?php if($id > 0){ ?>
+		<br /><?php if($id > 0){ echo "<small class='label bg-green'>".$this->lang->line('transaction_id')." - ".$data['transaction_id']."</small>"; }  ?><br /><br />
+	<?php } ?>
+	<label><?php echo $this->lang->line('member'); ?><?php if($id > 0){ echo " - ".ucwords($data['name']); } else { ?><span class="text-red">*</span> <?php } ?></label>
+	
+	<?php if($id > 0){ ?> 
+		<input type="hidden" name="member_id" id="member_id" value="<?php echo $data['member_id']; ?>" />
+    <?php } else { ?>
+	
+	<select  name="member_id"  id="member_id" onchange="getSubscription(this.value)"   class="form-control">
 		<option value=""><?php echo $this->lang->line('select'); ?></option>
 		<?php 
 		$memeber = set_value('member_id', $data['member_id']);
@@ -57,14 +65,23 @@
 		<option value="<?php echo $val['id']; ?>" <?php if($val['id'] == $memeber){ ?>  selected <?php } ?> ><?php echo $val['first_name'].' '.$val['last_name']; ?> [<?php echo $val['member_id']; ?>]</option>
 	    <?php }} ?>
 	</select>
-</div>
-				  
+	<?php } ?>
+	
+	
+</div>			  
 <div class="col-md-12">
-<label><?php echo $this->lang->line('subscription'); ?><span class="text-red">*</span></label>
-<select name="subscription"  onchange="getSubscriptionValue(this.value)" id="subscription"  class="form-control">
+<label><?php echo $this->lang->line('subscription'); ?><?php if($id > 0){ echo " - ".$data['sub']; } else { ?><span class="text-red">*</span><?php } ?></label>
+
+
+<?php if($id > 0){ ?> 
+		<input type="hidden" name="subscription" id="subscription" value="<?php echo $data['subscription']; ?>" />
+    <?php } else { ?>
+<select name="subscription" <?php if($id > 0){ ?>  style="display:none" <?php } ?>  onchange="getSubscriptionValue(this.value)" id="subscription"  class="form-control">
 <option value=""><?php echo $this->lang->line('select'); ?></option>
 <?php echo $subdrop; ?>
 </select>
+<?php } ?>
+
 </div>
 
 
@@ -78,7 +95,7 @@
 <input name="amount" value="<?php echo set_value('amount', $data['amount']); ?>" onkeyUp="processTotal()" id="amount" type="text" class="currency form-control" placeholder="<?php echo $this->lang->line('payment_amount'); ?>">
 </div>
 
-<div class="col-md-6">
+<div class="col-md-6" <?php if($id > 0){ ?>  style="visibility:hidden" <?php } ?> >
 <label><?php echo $this->lang->line('remaining_amount'); ?></label>
 <input value="<?php echo set_value('remaining_amount', $data['remaining_amount']); ?>" name="remaining_amount" readonly id="remaining" type="text" class="currency form-control" >
 </div>
@@ -309,6 +326,8 @@
 				   $('#subscription').html(result.data);
 			   } else {
 				   $('#balance').val('0.00');
+				   $('#amount').val('0.00');
+				   $('#remaining').val('0.00');
 				   $('#subscription').html('<option><?php echo $this->lang->line("select"); ?></option>');
 				   $('#error_notification').html("<?php echo $this->lang->line('no_subscription'); ?>");
 				   $('#error_notification').show();
@@ -317,6 +336,8 @@
             }});
 		} else {
 			$('#balance').val('0.00');
+			$('#amount').val('0.00');
+		    $('#remaining').val('0.00');
 			$('#subscription').html('<option><?php echo $this->lang->line("select"); ?></option>');
 		}
 	}
@@ -328,14 +349,20 @@
 			$.ajax({ dataType: "JSON",  url: "<?php echo site_url('get-user-subscription-value'); ?>/"+id, success: function(result) {
                if(result.status == 1){
 				   $('#balance').val(result.data);
+				   $('#amount').val('0.00');
+				   $('#remaining').val(result.data);
 			   } else {
 				   $('#balance').val('0.00');
+				   $('#amount').val('0.00');
+				   $('#remaining').val('0.00');
 			   }
 			   processTotal();
 			   $.unblockUI(); 
             }});
 		} else {
 			 $('#balance').val('0.00');
+			$('#amount').val('0.00');
+		    $('#remaining').val('0.00');
 			 processTotal();
 		}
 		

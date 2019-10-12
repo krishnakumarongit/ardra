@@ -8,7 +8,7 @@ class Payment_model extends CI_Model {
             $this->db->insert('payments', $data);
         }
         
-        public function update($data, $id)
+        public function update($data, $id, $gym, $branch)
         {
 			$this->db->where('gym', $gym);
 			$this->db->where('branch', $branch);
@@ -16,7 +16,35 @@ class Payment_model extends CI_Model {
             $this->db->update('payments', $data);
         }
         
-        public function getSubscription($id, $branch_id, $gym_id)
+        public function getTotalPayment($id, $gym, $branch)
+        {
+			$this->db->select('SUM(amount) AS amount', FALSE);
+			$this->db->where('gym', $gym);
+			$this->db->where('branch', $branch);
+			$this->db->where('subscription', $id);
+            $q = $this->db->get('payments');
+            $data = $q->result_array();
+            if (isset($data[0]) && count($data[0]) > 0) {
+				return ['status' => 1, 'data' => $data[0]];
+			} else {
+				return ['status' => 0];
+			}	
+		}
+		
+		public function getCount($gym, $branch){
+			$this->db->select('count(id) AS amount', FALSE);
+			$this->db->where('gym', $gym);
+			$this->db->where('branch', $branch);
+            $q = $this->db->get('payments');
+            $data = $q->result_array();
+            if (isset($data[0]) && count($data[0]) > 0) {
+				return ($data[0]['amount']+1);
+			} else {
+				return 1;
+			}	
+		}
+        
+        public function getPayment($id, $branch_id, $gym_id)
         {
 			$this->db->where('id', $id);
 			$this->db->where('gym', $gym_id);

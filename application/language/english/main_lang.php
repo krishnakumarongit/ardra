@@ -158,9 +158,7 @@ $lang['subscription_ends'] = 'Subscription End Date';
 $lang['no_payment_received'] = 'No Payment Received';
 $lang['payment_completed'] = 'Payment Completed';
 $lang['due'] = 'Due';
-
 $lang['payment_amount_validation'] = 'We dont understand the input for payment amount field. Try using only numbers with a period(.) to indicate cents like 100.50'; 
-
 $lang['payment'] = 'Payment';
 $lang['payments'] = 'Payments';
 $lang['payment_for'] = 'Payment For';
@@ -171,13 +169,10 @@ $lang['payment_date'] = 'Payment Date';
 $lang['more_payment'] = 'More Payment Required';
 $lang['next_payment'] = 'Next Payment Date';
 $lang['transaction_id'] = 'Transaction ID';
-
-
 $lang['cash'] = 'Cash';
 $lang['credit_card'] = 'Credit Card';
 $lang['debit_card'] = 'Debit Card';
 $lang['net_banking'] = 'Net Banking';
-
 $lang['subscribed_on'] = 'Subscribed On';
 $lang['no_subscription'] = 'Users not subscribed to any memberships yet';
 

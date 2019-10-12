@@ -8,9 +8,11 @@ class Subscription_model extends CI_Model {
             $this->db->insert('subscriptions', $data);
         }
         
-        public function update($data, $id)
+        public function update($data, $id, $branch_id, $gym_id)
         {
 			$this->db->where('id', $id);
+			$this->db->where('gym', $gym_id);
+			$this->db->where('branch', $branch_id);
             $this->db->update('subscriptions', $data);
         }
         
@@ -31,7 +33,7 @@ class Subscription_model extends CI_Model {
         
         public function getSubscriptionByMember($id, $branch_id, $gym_id) {
 		    $this->db->where('member_id', $id);
-		    $this->db->where('further_payment_required', 'Yes');
+		    $this->db->where('further_payment_required', 'yes');
 			$this->db->where('gym', $gym_id);
 			$this->db->where('branch', $branch_id);
 			$q = $this->db->get('subscriptions');

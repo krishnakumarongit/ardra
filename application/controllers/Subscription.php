@@ -164,7 +164,7 @@ class Subscription extends MY_Controller {
 					$_SESSION['success'] = $this->lang->line('subscription').' '.$this->lang->line('add_success');	
 					$this->subscription->insert($data);
 				} else {
-					$this->subscription->update($data, $id);
+					$this->subscription->update($data, $id, $_SESSION['gym'], $_SESSION['branch']);
 					$_SESSION['success'] = $this->lang->line('subscription').' '.$this->lang->line('update_success');	
 				}
 				redirect(site_url('list-subscriptions'));
