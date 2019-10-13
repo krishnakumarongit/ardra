@@ -8,7 +8,7 @@
   </h1>
   <ol class="breadcrumb">
 	<li><a href="<?php echo site_url('dashboard'); ?>"><i class="fa fa-dashboard"></i> <?php echo $this->lang->line('home'); ?></a></li>
-	<li><a href="<?php echo site_url('list-payments'); ?>"><?php echo $this->lang->line('payments'); ?></a></li>
+	<li><a href="<?php echo site_url('list-payment'); ?>"><?php echo $this->lang->line('payments'); ?></a></li>
 	<li class="active"><?php echo $this->lang->line('payment'); ?> <?php if($id == 0){ echo $this->lang->line('add'); } else { echo $this->lang->line('update'); } ?></li>
   </ol>
 </section>
@@ -392,11 +392,11 @@ function processTotal() {
 	$(function () {
 		$('#payment_date').datepicker({
 		  autoclose: true,
-		  format: 'd/mm/yyyy'
+		  format: 'd/mm/yyyy',
 		});
 		$('#next_payment').datepicker({
 		  autoclose: true,
-		  format: 'd/mm/yyyy'
+		  format: 'd/mm/yyyy',
 		});
 		$('.currency').maskMoney({thousands:'', decimal:'.', allowZero:true, suffix: ''});
 	});

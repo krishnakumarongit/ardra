@@ -176,6 +176,8 @@ $lang['net_banking'] = 'Net Banking';
 $lang['subscribed_on'] = 'Subscribed On';
 $lang['no_subscription'] = 'Users not subscribed to any memberships yet';
 
+$lang['date_from'] = 'From Date';
+$lang['date_to'] = 'To Date';
 
 
 

@@ -38,6 +38,20 @@
         </li>
         
         
+         <li class="treeview  <?php if(isset($this->payment_menu) && $this->payment_menu == 'active'){ ?> menu-open<?php } ?>" <?php if(isset($this->payment_menu) && $this->payment_menu == 'active'){ ?> style="height:auto;" <?php } ?>>
+          <a href="#">
+            <i class="fa  fa-money"></i> <span><?php echo $this->lang->line('payment'); ?></span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu"  <?php if(isset($this->payment_menu) && $this->payment_menu == 'active'){ ?> style="display:block" <?php } ?>>
+            <li class="<?php if(isset($this->payment_list_menu) && $this->payment_list_menu == 'active'){ ?> active<?php } ?>"><a href="<?php echo site_url('list-payment'); ?>"><i class="fa fa-circle-o"></i> <?php echo $this->lang->line('payment'); ?> <?php echo $this->lang->line('list'); ?></a></li>
+            <li class="<?php if(isset($this->payment_add_menu) && $this->payment_add_menu == 'active'){ ?> active<?php } ?>"><a href="<?php echo site_url('add-payment'); ?>"><i class="fa fa-circle-o"></i> <?php echo $this->lang->line('add'); ?> <?php echo $this->lang->line('payment'); ?></a></li>
+          </ul>
+        </li>
+        
+        
         
         
         <li class="treeview">

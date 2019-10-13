@@ -15,7 +15,7 @@ class Payment extends MY_Controller {
 
 	public function add($id = 0)
 	{
-		$this->subscription_add_menu = 'active'; 
+		$this->payment_add_menu = 'active'; 
 		$this->load->helper(array('form'));
         $this->load->library('form_validation');
         $this->load->model('Country_model','country');
@@ -187,6 +187,11 @@ class Payment extends MY_Controller {
 					'gym' => $_SESSION['gym'],
 					'branch' => $_SESSION['branch']		
 				];	
+				
+				$subscription_result_name = $this->subscription->getSubscription($subscription, $_SESSION['branch'], $_SESSION['gym']);
+				if ($subscription_result_name['status'] == 1) {
+					$data['subscription_name'] = $subscription_result_name['data']['membership_name'];
+				}
 							
 				if ($id == 0) {
 					$data['created_date'] = date('Y-m-d H:i:s');
@@ -223,7 +228,7 @@ class Payment extends MY_Controller {
 				    
 				    }	
 				}
-				redirect(site_url('list-payments'));
+				redirect(site_url('list-payment'));
 			}   
 		}
 		
@@ -300,12 +305,14 @@ class Payment extends MY_Controller {
 	
 	function list()
 	{
-		$this->membership_list_menu = 'active';
+		$this->payment_list_menu = 'active';
 		$this->load->library("pagination");
-		$this->load->model('Membership_model','membership');
+		$this->load->model('Payment_model','payment');
+		$this->load->model('Member_model','member');
+		$members = $this->member->getAll($_SESSION['branch'], $_SESSION['gym']);
 		$config = array();
-        $config["base_url"] = site_url('list-memberships');
-        $config["total_rows"] = $this->membership->get_count($_GET, $_SESSION['branch'], $_SESSION['gym']);
+        $config["base_url"] = site_url('list-payment');
+        $config["total_rows"] = $this->payment->get_count($_GET, $_SESSION['branch'], $_SESSION['gym']);
         $config["per_page"] = PAGE_COUNT;
         $config["uri_segment"] = PAGE_SEGMENT;
         $config['reuse_query_string'] = true;
@@ -326,9 +333,9 @@ class Payment extends MY_Controller {
         $this->pagination->initialize($config);
         $page = ($this->uri->segment(PAGE_SEGMENT)) ? $this->uri->segment(PAGE_SEGMENT) : 0;
         $data['links'] = $this->pagination->create_links();
-        $data['memebrs'] = $this->membership->getMemberships($config["per_page"], $page, $_GET, $_SESSION['branch'], $_SESSION['gym']);
-		$view = $this->load->view('membership_list',['data' => $data, 'total' => $config["total_rows"]],true);
-		$this->load->view('layout',['view' => $view, 'meta_title' => $this->lang->line('memberships')]);		
+        $data['payments'] = $this->payment->getPayments($config["per_page"], $page, $_GET, $_SESSION['branch'], $_SESSION['gym']);
+		$view = $this->load->view('payment_list',['data' => $data,'members' => $members, 'total' => $config["total_rows"]],true);
+		$this->load->view('layout',['view' => $view, 'meta_title' => $this->lang->line('payments')]);		
 	}
 	
     

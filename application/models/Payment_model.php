@@ -83,7 +83,7 @@ class Payment_model extends CI_Model {
 			}
         }
         
-        public function getSubscriptions($limit, $start, $get, $branch_id, $gym_id) 
+        public function getPayments($limit, $start, $get, $branch_id, $gym_id) 
         {
 			 $where = ' gym ='.$gym_id.' AND branch ='.$branch_id.' ';
 			
@@ -91,43 +91,80 @@ class Payment_model extends CI_Model {
 				$where .= ' and member_id ='.$get['member_id'].' ';
 			 }
 			 
-			 if (isset($get['membership_id']) && $get['membership_id'] !="" ) {
-				$where .= ' and membership_id ='.$get['membership_id'].' ';
+			 if (isset($get['transaction_id']) && $get['transaction_id'] !="" ) {
+				$where .= ' and transaction_id ='.$get['transaction_id'].' ';
 			 }
 			 
-			 if (isset($get['status']) && $get['status'] !="" ) {
-				$where .= ' and next_payment ="'.$get['status'].'" ';
+			
+			 if (isset($get['source']) && $get['source'] !="" ) {
+				$where .= ' and source ="'.$get['source'].'" ';
 			 }
+			 
+			 if ((isset($get['date_from']) && $get['date_from'] !="") &&  (isset($get['date_to']) && $get['date_to'] !="" )) {
+			      $where .= ' and payment_date  BETWEEN "'.$this->formatDate($get['date_from']).'" AND "'.$this->formatDate($get['date_to']).'" ';
+			 } else{
+			 
+				 if (isset($get['date_from']) && $get['date_from'] !="" ) {
+					$where .= ' and payment_date >="'.$this->formatDate($get['date_from']).'" ';
+				 }
+				 
+				 if (isset($get['date_to']) && $get['date_to'] !="" ) {
+					$where .= ' and payment_date <="'.$this->formatDate($get['date_to']).'" ';
+				 }
+				 
+		     }
 			 
              $query = $this->db->query('select * from payments WHERE '.$where.' LIMIT '.$start.','.$limit);
              return $query->result();		
 		}
 		
-		public function get_count($get, $branch_id, $gym_id) {
-			 $where = ' gym ='.$gym_id.' AND branch ='.$branch_id;
+		public function get_count($get, $branch_id, $gym_id) 
+		{
 			
+			 $where = ' gym ='.$gym_id.' AND branch ='.$branch_id;
 			 if (isset($get['member_id']) && $get['member_id'] !="" ) {
 				$where .= ' and member_id ='.$get['member_id'].' ';
 			 }
 			 
-			 if (isset($get['membership_id']) && $get['membership_id'] !="" ) {
-				$where .= ' and membership_id ='.$get['membership_id'].' ';
+			 if (isset($get['transaction_id']) && $get['transaction_id'] !="" ) {
+				$where .= ' and transaction_id ='.$get['transaction_id'].' ';
 			 }
 			 
-			 if (isset($get['status']) && $get['status'] !="" ) {
-				$where .= ' and next_payment ="'.$get['status'].'" ';
+			  if ((isset($get['date_from']) && $get['date_from'] !="") &&  (isset($get['date_to']) && $get['date_to'] !="" )) {
+			      $where .= ' and payment_date  BETWEEN "'.$this->formatDate($get['date_from']).'" AND "'.$this->formatDate($get['date_to']).'" ';
+			 } else{
+			 
+				 if (isset($get['date_from']) && $get['date_from'] !="" ) {
+					$where .= ' and payment_date >="'.$this->formatDate($get['date_from']).'" ';
+				 }
+				 
+				 if (isset($get['date_to']) && $get['date_to'] !="" ) {
+					$where .= ' and payment_date <="'.$this->formatDate($get['date_to']).'" ';
+				 }
+				 
+		     }
+			 		 
+			 if (isset($get['source']) && $get['source'] !="" ) {
+				$where .= ' and source ="'.$get['source'].'" ';
 			 }
 			 
 			 $query = $this->db->query('select * from payments WHERE '.$where);
 			 return $query->num_rows();
-            
         } 
         
-        public function delete($id, $branch, $gym){
+        public function delete($id, $branch, $gym)
+        {
 			$this->db->where('gym', $gym);
 			$this->db->where('branch', $branch);
 			$this->db->where('id', $id);
 			$this->db->delete('payments');
 		}
+		
+		function formatDate($str)
+	    {
+			$test_date = $str;
+			$test_arr  = explode('/', $test_date);
+			return $test_arr[2].'-'.$test_arr[1].'-'.$test_arr[0];
+	    }
 
 }
