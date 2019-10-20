@@ -74,9 +74,10 @@
                     $memebership =  set_value('membership_id', $data['membership_id']);
                 	if (count($memberships) >0) { 
 					foreach ($memberships as $row => $val) {  
+						if($val['deleted'] == 0){
 				   ?>
                	      <option value="<?php echo $val['id']; ?>" <?php if($val['id'] == $memebership){ ?> selected <?php } ?> ><?php echo $val['name']; ?></option>
-               	  <?php }} ?>
+               	  <?php }}} ?>
                 </select>
                 </div>
                 

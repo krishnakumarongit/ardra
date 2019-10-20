@@ -129,9 +129,13 @@ $lang['fields_required'] = 'Fields marked with an * are required';
 $lang['fee_validation'] = 'We dont understand the input for Fee field. Try using only numbers with a period(.) to indicate cents like 100.50';
 $lang['duration_validation'] = 'We dont understand the input for Duration field. Try using only numbers like 12';
 $lang['add_success'] = ' added successfully';
+$lang['cancel_success'] = ' cancelled successfully';
 $lang['deleted_success'] = ' deleted successfully';
 $lang['update_success'] = ' updated successfully';
 $lang['delete_confirm'] = 'Are you sure you want to delete ?';
+
+$lang['cancel_confirm'] = 'Are you sure you want to cancel this payment ?';
+
 $lang['created_at'] = 'Date created';
 $lang['subscription'] = 'Subscription';
 $lang['subscriptions'] = 'Subscriptions';
@@ -179,7 +183,8 @@ $lang['no_subscription'] = 'Users not subscribed to any memberships yet';
 $lang['date_from'] = 'From Date';
 $lang['date_to'] = 'To Date';
 
-
+$lang['active'] = 'Active';
+$lang['cancelled'] = 'Cancelled';
 
 
 

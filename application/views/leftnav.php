@@ -11,7 +11,7 @@
         
         <li class="treeview  <?php if(isset($this->membership_menu) && $this->membership_menu == 'active'){ ?> menu-open<?php } ?>" <?php if(isset($this->membership_menu) && $this->membership_menu == 'active'){ ?> style="height:auto;" <?php } ?>>
           <a href="#">
-            <i class="fa  fa-briefcase"></i> <span><?php echo $this->lang->line('membership'); ?></span>
+            <i class="fa  fa-briefcase"></i> <span><?php echo $this->lang->line('memberships'); ?></span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
@@ -26,7 +26,7 @@
         
         <li class="treeview  <?php if(isset($this->subscription_menu) && $this->subscription_menu == 'active'){ ?> menu-open<?php } ?>" <?php if(isset($this->subscription_menu) && $this->subscription_menu == 'active'){ ?> style="height:auto;" <?php } ?>>
           <a href="#">
-            <i class="fa  fa-random"></i> <span><?php echo $this->lang->line('subscription'); ?></span>
+            <i class="fa  fa-random"></i> <span><?php echo $this->lang->line('subscriptions'); ?></span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
@@ -40,7 +40,7 @@
         
          <li class="treeview  <?php if(isset($this->payment_menu) && $this->payment_menu == 'active'){ ?> menu-open<?php } ?>" <?php if(isset($this->payment_menu) && $this->payment_menu == 'active'){ ?> style="height:auto;" <?php } ?>>
           <a href="#">
-            <i class="fa  fa-money"></i> <span><?php echo $this->lang->line('payment'); ?></span>
+            <i class="fa  fa-money"></i> <span><?php echo $this->lang->line('payments'); ?></span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>

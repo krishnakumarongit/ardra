@@ -21,11 +21,11 @@
 <table class="table table-bordered table-striped">
 <tr>
 <td><?php echo $this->lang->line('member'); ?></td>
-<td> <?php echo $data['member_name']; ?></td>
+<td> <?php echo ucwords($data['member_name']); ?>  [<?php echo $member['data']['member_id']; ?>]</td>
 </tr>
 <tr>
 <td><?php echo $this->lang->line('membership'); ?></td>
-<td><?php echo $data['membership_name']; ?></td>
+<td><?php echo ucwords($data['membership_name']); ?></td>
 </tr>
 <tr>
 <td><?php echo $this->lang->line('fee'); ?></td>

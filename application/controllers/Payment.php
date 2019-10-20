@@ -15,6 +15,10 @@ class Payment extends MY_Controller {
 
 	public function add($id = 0)
 	{
+		
+		if (intval($id) > 0) {
+			exit;
+		}
 		$this->payment_add_menu = 'active'; 
 		$this->load->helper(array('form'));
         $this->load->library('form_validation');
@@ -47,7 +51,7 @@ class Payment extends MY_Controller {
 				if ($subscription_result['status'] == 1) {
 				    $data['balance'] = floatval($subscription_result['data']['amount_due']);
 				    $data['sub'] = $subscription_result['data']['membership_name']." ".$this->lang->line('subscribed_on')." [".date('d/m/Y',strtotime($subscription_result['data']['start_date']))."]";
-				    if ($data['balance'] >= $data['amount']) {
+				    if (floatval($data['balance']) < $subscription_result['data']['amount_to_paid']) {
 				       $data['remaining_amount'] = $data['balance'];
 				    } else {
 					   $data['remaining_amount'] = 0;
@@ -184,6 +188,7 @@ class Payment extends MY_Controller {
 					'source' => $payment_source,
 					'note' => $note,
 					'payment_date' => $this->formatDate($payment_date),
+					'status' => 'active',
 					'gym' => $_SESSION['gym'],
 					'branch' => $_SESSION['branch']		
 				];	
@@ -213,21 +218,7 @@ class Payment extends MY_Controller {
 				}
 				//update balance
 				//get full payments
-				$totalPayments = $this->payment->getTotalPayment($subscription, $_SESSION['gym'], $_SESSION['branch']);
-				if ($totalPayments['status'] == 1) {
-					$total = floatval($totalPayments['data']['amount']);
-					$subscription_result = $this->subscription->getSubscription($subscription, $_SESSION['branch'], $_SESSION['gym']);
-               		if ($subscription_result['status'] == 1) {
-				       $subscription_total = floatval($subscription_result['data']['amount_to_paid']);
-				       if ($subscription_total > 0 && $total > 0) {
-						   if ($subscription_total >= $total) {
-							   $update_amt = $subscription_total - $total;
-							   $this->subscription->update(array('amount_due' => $update_amt), $subscription, $_SESSION['gym'], $_SESSION['branch']);
-						   }
-					   }
-				    
-				    }	
-				}
+				$this->updateDue($subscription);
 				redirect(site_url('list-payment'));
 			}   
 		}
@@ -348,24 +339,36 @@ class Payment extends MY_Controller {
 	}
 	
 	function delete($id) {
+		
+		$this->load->model('Payment_model','payment');
+		$this->load->model('Subscription_model','subscription');
+		$result = $this->payment->getPayment($id, $_SESSION['branch'], $_SESSION['gym']);
+		if ($result['status'] == 0) {
+			die('you are not authorised to access this link');
+		}
+		$subscription = $result['data']['subscription'];
 		//check if this belongs to current gym and branch
-		$this->load->model('Membership_model','membership');
-		$this->membership->delete($id, $_SESSION['branch'], $_SESSION['gym']);
-		$_SESSION['success'] = $this->lang->line('membership').' '.$this->lang->line('deleted_success');	
-		redirect(site_url('list-memberships'));
+		$this->payment->delete($id, $_SESSION['branch'], $_SESSION['gym']);
+		$_SESSION['success'] = $this->lang->line('payment').' '.$this->lang->line('cancel_success');	
+		$this->updateDue($subscription);
+		//update subscription due
+		
+		redirect(site_url('list-payment'));
 	}
 	
-	function view($id) {
-		$this->load->model('Membership_model','membership');
-		$result = $this->membership->getMembership($id, $_SESSION['branch'], $_SESSION['gym']);
+	function view($id) 
+	{
+		$this->load->model('Payment_model','payment');
+		$result = $this->payment->getPayment($id, $_SESSION['branch'], $_SESSION['gym']);
 		if ($result['status'] == 0) {
 			die('you are not authorised to access this link');
 		} else {
 			$data = $result['data'];
 		}
-		
-		$meta_title = $this->lang->line('view').' '.$this->lang->line('membership');
-		$view = $this->load->view('membership_view', ['data' => $data, 'id' => $id], true);
+		$this->load->model('Member_model','member');
+		$member = $this->member->getMember($data['member_id'], $_SESSION['branch'], $_SESSION['gym']);
+		$meta_title = $this->lang->line('view').' '.$this->lang->line('payment');
+		$view = $this->load->view('payment_view', ['data' => $data, 'member' => $member,'id' => $id], true);
 		$this->load->view('layout',['view' => $view, 'meta_title' => $meta_title]);	
 	}
 	
@@ -379,7 +382,9 @@ class Payment extends MY_Controller {
 			$result_option = '<option value="">'.$this->lang->line('select').'</option>';
 			if (count($result['data']) > 0) {
 				foreach ($result['data'] as $row => $val) {
+					if ($val['deleted'] == 0) {
 					$result_option .= '<option value="'.$val['id'].'">'.$val['membership_name'].' '.$this->lang->line('subscribed_on').' ['.date("d/M/Y", strtotime($val['start_date'])).']</option>';
+					}
 				}
 		    }
 			$data = array('status'=> 1, 'data' => $result_option);
@@ -392,12 +397,11 @@ class Payment extends MY_Controller {
 		}
 	}
 	
+	
 	function balanceSubscription($id) {
 		$data = array();
 		$this->load->model('Subscription_model','subscripion');
 		$result = $this->subscripion->getSubscription($id, $_SESSION['branch'], $_SESSION['gym']);
-		
-
 		if ($result['status'] == 0) {
 			$data = array('status'=> 0);
 		} else {
@@ -405,6 +409,31 @@ class Payment extends MY_Controller {
 		}
 		echo json_encode($data);
 		exit;
+	}
+	
+	function updateDue($subscription) 
+	{
+		$this->load->model('Payment_model','payment');
+		$this->load->model('Subscription_model','subscripion');
+		$totalPayments = $this->payment->getTotalPayment($subscription, $_SESSION['gym'], $_SESSION['branch']);
+		if ($totalPayments['status'] == 1) {
+			$total = floatval($totalPayments['data']['amount']);
+			$subscription_result = $this->subscription->getSubscription($subscription, $_SESSION['branch'], $_SESSION['gym']);
+			if ($subscription_result['status'] == 1) {
+			   $subscription_total = floatval($subscription_result['data']['amount_to_paid']);
+			   if ($subscription_total > 0 && $total > 0) {
+				   if ($subscription_total >= $total) {
+					   $update_amt = $subscription_total - $total;
+					   $this->subscription->update(array('amount_due' => $update_amt), $subscription, $_SESSION['gym'], $_SESSION['branch']);
+				   } else {
+						$this->subscription->update(array('amount_due' => 0), $subscription, $_SESSION['gym'], $_SESSION['branch']);
+				   }
+			   }
+			
+			}	
+		}
+		return 1;
+		
 	}
 
 

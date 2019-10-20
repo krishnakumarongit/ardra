@@ -31,7 +31,8 @@ class Subscription_model extends CI_Model {
         }
         
         
-        public function getSubscriptionByMember($id, $branch_id, $gym_id) {
+        public function getSubscriptionByMember($id, $branch_id, $gym_id) 
+        {
 		    $this->db->where('member_id', $id);
 		    $this->db->where('further_payment_required', 'yes');
 			$this->db->where('gym', $gym_id);
@@ -87,11 +88,12 @@ class Subscription_model extends CI_Model {
 				$where .= ' and next_payment ="'.$get['status'].'" ';
 			 }
 			 
-             $query = $this->db->query('select * from subscriptions WHERE '.$where.' LIMIT '.$start.','.$limit);
+             $query = $this->db->query('select * from subscriptions WHERE deleted = 0 and '.$where.' LIMIT '.$start.','.$limit);
              return $query->result();		
 		}
 		
-		public function get_count($get, $branch_id, $gym_id) {
+		public function get_count($get, $branch_id, $gym_id) 
+		{
 			 $where = ' gym ='.$gym_id.' AND branch ='.$branch_id;
 			
 			 if (isset($get['member_id']) && $get['member_id'] !="" ) {
@@ -106,16 +108,17 @@ class Subscription_model extends CI_Model {
 				$where .= ' and next_payment ="'.$get['status'].'" ';
 			 }
 			 
-			 $query = $this->db->query('select * from subscriptions WHERE '.$where);
+			 $query = $this->db->query('select * from subscriptions WHERE deleted = 0 and '.$where);
 			 return $query->num_rows();
             
         } 
         
-        public function delete($id, $branch, $gym){
+        public function delete($id, $branch, $gym)
+        {
 			$this->db->where('gym', $gym);
 			$this->db->where('branch', $branch);
 			$this->db->where('id', $id);
-			$this->db->delete('subscriptions');
+			$this->db->update('subscriptions', array('deleted' => 1));
 		}
 
 }

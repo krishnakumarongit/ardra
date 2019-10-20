@@ -22,6 +22,7 @@ class Payment_model extends CI_Model {
 			$this->db->where('gym', $gym);
 			$this->db->where('branch', $branch);
 			$this->db->where('subscription', $id);
+			$this->db->where('status', 'active');
             $q = $this->db->get('payments');
             $data = $q->result_array();
             if (isset($data[0]) && count($data[0]) > 0) {
@@ -100,6 +101,10 @@ class Payment_model extends CI_Model {
 				$where .= ' and source ="'.$get['source'].'" ';
 			 }
 			 
+			 if (isset($get['status']) && $get['status'] !="" ) {
+				$where .= ' and status ="'.$get['status'].'" ';
+			 }
+			 
 			 if ((isset($get['date_from']) && $get['date_from'] !="") &&  (isset($get['date_to']) && $get['date_to'] !="" )) {
 			      $where .= ' and payment_date  BETWEEN "'.$this->formatDate($get['date_from']).'" AND "'.$this->formatDate($get['date_to']).'" ';
 			 } else{
@@ -143,6 +148,10 @@ class Payment_model extends CI_Model {
 				 }
 				 
 		     }
+		     
+		     if (isset($get['status']) && $get['status'] !="" ) {
+				$where .= ' and status ="'.$get['status'].'" ';
+			 }
 			 		 
 			 if (isset($get['source']) && $get['source'] !="" ) {
 				$where .= ' and source ="'.$get['source'].'" ';
@@ -157,7 +166,7 @@ class Payment_model extends CI_Model {
 			$this->db->where('gym', $gym);
 			$this->db->where('branch', $branch);
 			$this->db->where('id', $id);
-			$this->db->delete('payments');
+			$this->db->update('payments',array('status' => 'cancelled'));
 		}
 		
 		function formatDate($str)

@@ -271,10 +271,10 @@ class Subscription extends MY_Controller {
 	
 	function delete($id) {
 		//check if this belongs to current gym and branch
-		$this->load->model('Membership_model','membership');
-		$this->membership->delete($id, $_SESSION['branch'], $_SESSION['gym']);
-		$_SESSION['success'] = $this->lang->line('membership').' '.$this->lang->line('deleted_success');	
-		redirect(site_url('list-memberships'));
+		$this->load->model('Subscription_model','subscription');
+		$this->subscription->delete($id, $_SESSION['branch'], $_SESSION['gym']);
+		$_SESSION['success'] = $this->lang->line('subscription').' '.$this->lang->line('deleted_success');	
+		redirect(site_url('list-subscriptions'));
 	}
 	
 	function view($id) {
@@ -285,9 +285,10 @@ class Subscription extends MY_Controller {
 		} else {
 			$data = $result['data'];
 		}
-		
+		$this->load->model('Member_model','member');
+		$member = $this->member->getMember($data['member_id'], $_SESSION['branch'], $_SESSION['gym']);
 		$meta_title = $this->lang->line('view').' '.$this->lang->line('subscription');
-		$view = $this->load->view('subscription_view', ['data' => $data, 'id' => $id], true);
+		$view = $this->load->view('subscription_view', ['data' => $data,'member' => $member ,'id' => $id], true);
 		$this->load->view('layout',['view' => $view, 'meta_title' => $meta_title]);	
 	
 	}

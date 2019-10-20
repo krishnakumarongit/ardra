@@ -63,9 +63,10 @@
                     
                 	if (count($memberships) >0) { 
 					foreach ($memberships as $row => $val) {  
+						if($val['deleted'] == 0) {
 				   ?>
                	      <option value="<?php echo $val['id']; ?>" <?php if(isset($_GET['membership_id']) && $_GET['membership_id'] == $val['id'] ) { ?> selected <?php } ?> ><?php echo $val['name']; ?></option>
-               	  <?php }} ?>
+               	  <?php }}} ?>
                 </select>
                </div>
               <!-- /.form-group -->
@@ -131,8 +132,8 @@
 				foreach($data['subscriptions'] as $row) {	
 				?>
                 <tr>
-                  <td><a href="" title="<?php echo $this->lang->line('view'); ?>"><?php echo substr($row->member_name,0,15) ; ?></a></td>
-                  <td><a href="" title="<?php echo $this->lang->line('view'); ?>"><?php echo substr($row->membership_name,0,10); ?></a></td>
+                  <td><?php echo ucwords(substr($row->member_name,0,15)) ; ?></td>
+                  <td><?php echo ucwords(substr($row->membership_name,0,10)); ?></td>
                   <td>
                     <?php echo $this->currency.' '.$row->amount_to_paid; ?>
                   </td>

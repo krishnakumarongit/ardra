@@ -61,7 +61,7 @@ class Membership_model extends CI_Model {
 			 if (isset($get['name']) && $get['name'] !="" ) {
 				$where .= ' and name LIKE "%'.$get['name'].'%"';
 			 }
-             $query = $this->db->query('select * from memberships WHERE '.$where.' LIMIT '.$start.','.$limit);
+             $query = $this->db->query('select * from memberships WHERE deleted = 0 and '.$where.' LIMIT '.$start.','.$limit);
              return $query->result();		
 		}
 		
@@ -71,7 +71,7 @@ class Membership_model extends CI_Model {
 			 if (isset($get['name']) && $get['name'] !="" ) {
 				$where .= ' and name LIKE "%'.$get['name'].'%" ';
 			 }
-			 $query = $this->db->query('select * from memberships WHERE '.$where);
+			 $query = $this->db->query('select * from memberships WHERE deleted = 0 and '.$where);
 			 return $query->num_rows();
             
         } 
@@ -80,7 +80,7 @@ class Membership_model extends CI_Model {
 			$this->db->where('gym', $gym);
 			$this->db->where('branch', $branch);
 			$this->db->where('id', $id);
-			$this->db->delete('memberships');
+			$this->db->update('memberships', array('deleted' => 1));
 		}
 
 }

@@ -65,6 +65,8 @@
             
             
              <div class="col-md-6">
+		     <div class="row">
+				  <div class="col-md-6">
               <div class="form-group">
                 <label><?php echo $this->lang->line('source'); ?></label>
 				 <select name="source" id="source"  class="form-control">
@@ -76,6 +78,19 @@
 	        		<option value="net_banking" <?php if(isset($_GET['source']) && $_GET['source'] == 'net_banking' ) { ?> selected <?php } ?> ><?php echo $this->lang->line('net_banking'); ?></option>
 	        
 	             </select>
+			   </div>
+			   </div>
+			   <div class="col-md-6">
+              <div class="form-group">
+                <label><?php echo $this->lang->line('status'); ?></label>
+				 <select name="status" id="status"  class="form-control">
+					<option value=""><?php echo $this->lang->line('select'); ?></option>
+					<option value="active" <?php if(isset($_GET['status']) && $_GET['status'] == 'active' ) { ?> selected <?php } ?> ><?php echo $this->lang->line('active'); ?></option>
+	        		<option value="cancelled" <?php if(isset($_GET['status']) && $_GET['status'] == 'cancelled' ) { ?> selected <?php } ?> ><?php echo $this->lang->line('cancelled'); ?></option>
+	             </select>
+			   </div>
+			   </div>
+			   
 			   </div>
               <!-- /.form-group -->
               
@@ -139,11 +154,12 @@
                 <tbody>
 				<tr>
                   <th><?php echo $this->lang->line('member'); ?></th>
-                  <th><?php echo $this->lang->line('subscription'); ?></th>
+                  <th><?php echo $this->lang->line('membership'); ?></th>
                   <th><?php echo $this->lang->line('payment_amount'); ?></th>
                   <th><?php echo $this->lang->line('source'); ?></th>
                   <th><?php echo $this->lang->line('payment_date'); ?></th>
                   <th><?php echo $this->lang->line('transaction_id'); ?></th>
+                  <th><?php echo $this->lang->line('status'); ?></th>
                   <th style="text-align:center;"><?php echo $this->lang->line('actions'); ?></th>
                 </tr>
                 <?php 
@@ -157,7 +173,7 @@
                     <?php echo $this->currency.' '.$row->amount; ?>
                   </td>
                    <td>
-                    <?php echo $this->currency.' '.$this->lang->line($row->source); ?>
+                    <?php echo $this->lang->line($row->source); ?>
                   </td>
                    <td>
                     <?php echo date('M d, Y',strtotime($row->payment_date)); ?>
@@ -165,18 +181,18 @@
                   <td>
                     <?php echo $row->transaction_id; ?>
                   </td>
+                   <td>
+                    <small class="label pull-right  <?php if ($row->status == 'active'){ ?>bg-green<?php } else { ?>bg-red<?php } ?>"><?php echo  $this->lang->line($row->status); ?></small>
+                  </td>
                   <td style="text-align:center;">				
 					  <a title="<?php echo $this->lang->line('view'); ?>" href="<?php echo site_url('view-payment/'.$row->id); ?>">
 					  <button type="button" class="btn btn-success btn-sm" ><i class="fa fa-eye"></i>
-                </button></a>
-                
-                 <a title="<?php echo $this->lang->line('edit'); ?>" href="<?php echo site_url('add-payment/'.$row->id); ?>">
-					  <button type="button" class="btn btn-primary btn-sm" ><i class="fa fa-pencil"></i>
-                </button>
-                
- <a title="<?php echo $this->lang->line('delete'); ?>" onclick="return confirm('<?php echo $this->lang->line('delete_confirm'); ?>');" href="<?php echo site_url('delete-subscription/'.$row->id); ?>">
-					  <button type="button" class="btn btn-danger btn-sm" ><i class="fa fa-trash"></i>
-                </button></a>                              
+                </button></a>   
+                <?php if ($row->status == 'active'){ ?>                             
+ <a title="<?php echo $this->lang->line('cancel'); ?>" onclick="return confirm('<?php echo $this->lang->line('cancel_confirm'); ?>');" href="<?php echo site_url('delete-payment/'.$row->id); ?>">
+					  <button type="button" class="btn btn-danger btn-sm" ><i class="fa fa-ban"></i>
+                </button></a>   
+                <?php } ?>                           
                 </td>
                 </tr>
                 <?php }} else { ?>

@@ -15,7 +15,7 @@
 
 <section class="content">
 
-<form method="post" action="<?php echo site_url('add-payment/'.$id); ?>" onsubmit="return validate1();">	
+<form method="post" action="<?php echo site_url('add-payment/'.$id); ?>" onsubmit="return validate();">	
 <input type="hidden" id="balance" name="balance" value="<?php echo set_value('balance', $data['balance']); ?>" />
 <input type="hidden" name="post_check" value="1" />
 <div class="col-md-12">
@@ -92,13 +92,22 @@
 <div class="row"> 
 	<div class="col-md-6">
 <label><?php echo $this->lang->line('payment_amount'); ?> <span class="text-red">*</span></label>
-<input name="amount" value="<?php echo set_value('amount', $data['amount']); ?>" onkeyUp="processTotal()" id="amount" type="text" class="currency form-control" placeholder="<?php echo $this->lang->line('payment_amount'); ?>">
+<input name="amount" value="<?php echo set_value('amount', $data['amount']); ?>" onkeyUp="<?php if($id > 0){ ?>processNewTotal()<?php } else { ?>processTotal()<?php } ?>" id="amount" type="text" class="currency form-control" placeholder="<?php echo $this->lang->line('payment_amount'); ?>">
 </div>
 
-<div class="col-md-6" <?php if($id > 0){ ?>  style="visibility:hidden" <?php } ?> >
+<?php if($id > 0){ ?>
+<div class="col-md-6">
+<input type="hidden" id="paidamt" value="<?php echo  $data['amount']; ?>" />
 <label><?php echo $this->lang->line('remaining_amount'); ?></label>
 <input value="<?php echo set_value('remaining_amount', $data['remaining_amount']); ?>" name="remaining_amount" readonly id="remaining" type="text" class="currency form-control" >
 </div>
+<?php } else { ?>	 
+<div class="col-md-6"   >
+<label><?php echo $this->lang->line('remaining_amount'); ?></label>
+<input value="<?php echo set_value('remaining_amount', $data['remaining_amount']); ?>" name="remaining_amount" readonly id="remaining" type="text" class="currency form-control" >
+</div>
+<?php } ?>
+
 </div>
 </div>
 
@@ -388,6 +397,40 @@ function processTotal() {
 	
 }
 
+
+function processNewTotal() {
+	var payment_amount = $('#amount').val();
+	var ptamount = $('#paidamt').val();
+	
+	
+	var balance = $('#balance').val();	
+	var tot = 0;
+	
+	if (parseFloat(payment_amount) != NaN && parseFloat(ptamount) != NaN) {
+		
+		if (parseFloat(payment_amount) == parseFloat(ptamount)) {
+			tot = parseFloat(balance);
+		}
+		
+		if (parseFloat(payment_amount) < parseFloat(ptamount)) {
+			tot = parseFloat(balance) + (parseFloat(ptamount) - parseFloat(payment_amount));
+		}
+		
+		if (parseFloat(payment_amount) > parseFloat(ptamount)) {
+			tot = parseFloat(balance) - (parseFloat(payment_amount) - parseFloat(ptamount));
+		}
+		
+	}
+	
+	if (isNaN(tot)) {
+	  $('#remaining').val(balance);
+	} else if(tot < 1){
+	  $('#remaining').val('0.00');
+	} else {
+	  $('#remaining').val(tot);
+	}
+	
+}
 
 	$(function () {
 		$('#payment_date').datepicker({
