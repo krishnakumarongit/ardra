@@ -120,5 +120,71 @@ class Subscription_model extends CI_Model {
 			$this->db->where('id', $id);
 			$this->db->update('subscriptions', array('deleted' => 1));
 		}
+		
+		
+		 public function getDueSubscriptions($limit, $start, $get, $branch_id, $gym_id) 
+        {
+			 $where = ' gym ='.$gym_id.' AND branch ='.$branch_id.' ';
+			
+			 if (isset($get['member_id']) && $get['member_id'] !="" ) {
+				$where .= ' and member_id ='.$get['member_id'].' ';
+			 }
+			 
+			 if (isset($get['membership_id']) && $get['membership_id'] !="" ) {
+				$where .= ' and membership_id ='.$get['membership_id'].' ';
+			 }
+			 		 
+			 if ((isset($get['date_from']) && $get['date_from'] !="") &&  (isset($get['date_to']) && $get['date_to'] !="" )) {
+			      $where .= ' and next_payment  BETWEEN "'.$this->formatDate($get['date_from']).'" AND "'.$this->formatDate($get['date_to']).'" ';
+			 } else{
+			 
+				 if (isset($get['date_from']) && $get['date_from'] !="" ) {
+					$where .= ' and next_payment >="'.$this->formatDate($get['date_from']).'" ';
+				 }
+				 
+				 if (isset($get['date_to']) && $get['date_to'] !="" ) {
+					$where .= ' and next_payment <="'.$this->formatDate($get['date_to']).'" ';
+				 }
+		     }
+			 
+             $query = $this->db->query('select * from subscriptions WHERE deleted = 0 and due ="yes" and '.$where.' order by next_payment ASC LIMIT '.$start.','.$limit);
+             return $query->result();		
+		}
+		
+		public function get_due_count($get, $branch_id, $gym_id) 
+		{
+			 $where = ' gym ='.$gym_id.' AND branch ='.$branch_id;
+			
+			 if (isset($get['member_id']) && $get['member_id'] !="" ) {
+				$where .= ' and member_id ='.$get['member_id'].' ';
+			 }
+			 
+			 if (isset($get['membership_id']) && $get['membership_id'] !="" ) {
+				$where .= ' and membership_id ='.$get['membership_id'].' ';
+			 }
+			 
+			 if ((isset($get['date_from']) && $get['date_from'] !="") &&  (isset($get['date_to']) && $get['date_to'] !="" )) {
+			      $where .= ' and next_payment  BETWEEN "'.$this->formatDate($get['date_from']).'" AND "'.$this->formatDate($get['date_to']).'" ';
+			 } else{
+				 if (isset($get['date_from']) && $get['date_from'] !="" ) {
+					$where .= ' and next_payment >="'.$this->formatDate($get['date_from']).'" ';
+				 }
+				 
+				 if (isset($get['date_to']) && $get['date_to'] !="" ) {
+					$where .= ' and next_payment <="'.$this->formatDate($get['date_to']).'" ';
+				 }
+		     }
+			 
+			 $query = $this->db->query('select * from subscriptions WHERE deleted = 0 and due ="yes" and '.$where);
+			 return $query->num_rows();
+            
+        } 
+        
+        function formatDate($str)
+	    {
+			$test_date = $str;
+			$test_arr  = explode('/', $test_date);
+			return $test_arr[2].'-'.$test_arr[1].'-'.$test_arr[0];
+	    }
 
 }

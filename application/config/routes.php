@@ -27,12 +27,22 @@ $route['delete-subscription/(:num)'] = 'subscription/delete/$1';
 
 
 $route['add-payment/(:num)'] = 'payment/add/$1';
+
+
+$route['add-due-payment/(:num)'] = 'payment/addDue/$1';
 $route['list-payment'] = 'payment/list';
 $route['list-payment/(:num)'] = 'payment/list/$1';
 $route['add-payment'] = 'payment/add';
 $route['view-payment/(:num)'] = 'payment/view/$1';
 $route['get-user-subscription/(:num)'] = 'payment/viewsubscription/$1';
 $route['get-user-subscription-value/(:num)'] = 'payment/balanceSubscription/$1';
+
+
+$route['list-due-payment'] = 'payment/dueList';
+$route['list-due-payment/(:num)'] = 'payment/dueList/$1';
+
+
+
 
 
 $route['delete-payment/(:num)'] = 'payment/delete/$1';

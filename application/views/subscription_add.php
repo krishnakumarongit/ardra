@@ -46,8 +46,9 @@
 				  
 <?php if ($id > 0) { ?>				  
 <div class="col-md-12">
-	<div class="callout callout-info" style="margin-bottom:0px;">
-		<p><?php echo ucwords($data['member_name']); ?></p><p><?php echo ucwords($data['membership_name']); ?></p>
+	
+		<label><?php echo $this->lang->line('member'); ?> - <?php echo ucwords($data['member_name']); ?></label> <br />
+		<label><?php echo $this->lang->line('membership'); ?> - <?php echo ucwords($data['membership_name']); ?></label>
 	</div>
 </div>
 <?php } ?>

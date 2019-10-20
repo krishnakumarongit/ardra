@@ -224,7 +224,7 @@ class Subscription extends MY_Controller {
 	
 	function list()
 	{
-		
+		$this->subscription_list_menu = 'active';
 		$this->load->model('Membership_model','membership');
         $this->load->model('Member_model','member');
 		$memberships = $this->membership->getAll($_SESSION['branch'], $_SESSION['gym']);

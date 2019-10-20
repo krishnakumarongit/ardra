@@ -48,6 +48,7 @@
           <ul class="treeview-menu"  <?php if(isset($this->payment_menu) && $this->payment_menu == 'active'){ ?> style="display:block" <?php } ?>>
             <li class="<?php if(isset($this->payment_list_menu) && $this->payment_list_menu == 'active'){ ?> active<?php } ?>"><a href="<?php echo site_url('list-payment'); ?>"><i class="fa fa-circle-o"></i> <?php echo $this->lang->line('payment'); ?> <?php echo $this->lang->line('list'); ?></a></li>
             <li class="<?php if(isset($this->payment_add_menu) && $this->payment_add_menu == 'active'){ ?> active<?php } ?>"><a href="<?php echo site_url('add-payment'); ?>"><i class="fa fa-circle-o"></i> <?php echo $this->lang->line('add'); ?> <?php echo $this->lang->line('payment'); ?></a></li>
+             <li class="<?php if(isset($this->payment_duelist_menu) && $this->payment_duelist_menu == 'active'){ ?> active<?php } ?>"><a href="<?php echo site_url('list-due-payment'); ?>"><i class="fa fa-circle-o"></i><?php echo $this->lang->line('due')." ".$this->lang->line('payments'); ?></a></li>
           </ul>
         </li>
         

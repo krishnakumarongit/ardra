@@ -3,13 +3,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Payment extends MY_Controller {
 	
-	public $payment_menu, $payment_add_menu, $payment_list_menu;
+	public $payment_menu, $payment_add_menu, $payment_list_menu, $payment_duelist_menu;
     public function __construct()
 	{
 		parent::__construct();
 		$this->payment_menu = 'active';
 		$this->payment_add_menu = ''; 
 		$this->payment_list_menu = '';
+		$this->payment_duelist_menu = '';
 		
 	}
 
@@ -429,14 +430,264 @@ class Payment extends MY_Controller {
 						$this->subscription->update(array('amount_due' => 0), $subscription, $_SESSION['gym'], $_SESSION['branch']);
 				   }
 			   }
-			
 			}	
 		}
 		return 1;
-		
 	}
 
 
+	
+	function dueList()
+	{
+		$this->payment_duelist_menu = 'active';
+		$this->load->model('Membership_model','membership');
+        $this->load->model('Member_model','member');
+		$memberships = $this->membership->getAll($_SESSION['branch'], $_SESSION['gym']);
+        $members = $this->member->getAll($_SESSION['branch'], $_SESSION['gym']);
+		$this->subscription_list_menu = 'active';
+		$this->load->library("pagination");
+		$this->load->model('Subscription_model','subscription');
+		$config = array();
+        $config["base_url"] = site_url('list-due-payment');
+        $config["total_rows"] = $this->subscription->get_due_count($_GET, $_SESSION['branch'], $_SESSION['gym']);
+        $config["per_page"] = PAGE_COUNT;
+        $config["uri_segment"] = PAGE_SEGMENT;
+        $config['reuse_query_string'] = true;
+		$config['full_tag_open'] = "<ul class='pagination pagination-sm no-margin pull-right'>";
+		$config['full_tag_close'] ="</ul>";
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$config['cur_tag_open'] = "<li class='disabled'><li class='active'><a href='#'>";
+		$config['cur_tag_close'] = "<span class='sr-only'></span></a></li>";
+		$config['next_tag_open'] = "<li>";
+		$config['next_tagl_close'] = "</li>";
+		$config['prev_tag_open'] = "<li>";
+		$config['prev_tagl_close'] = "</li>";
+		$config['first_tag_open'] = "<li>";
+		$config['first_tagl_close'] = "</li>";
+		$config['last_tag_open'] = "<li>";
+		$config['last_tagl_close'] = "</li>";
+        $this->pagination->initialize($config);
+        $page = ($this->uri->segment(PAGE_SEGMENT)) ? $this->uri->segment(PAGE_SEGMENT) : 0;
+        $data['links'] = $this->pagination->create_links();
+        $data['subscriptions'] = $this->subscription->getDueSubscriptions($config["per_page"], $page, $_GET, $_SESSION['branch'], $_SESSION['gym']);
+		$view = $this->load->view('subscription_due_list',['data' => $data,'members' => $members, 'memberships' => $memberships,'total' => $config["total_rows"]],true);
+		$this->load->view('layout',['view' => $view, 'meta_title' => $this->lang->line('due')." ".$this->lang->line('payments')]);				
+	}
+	
+	public function addDue($id = 0)
+	{
+
+		$this->payment_add_menu = 'active'; 
+		$this->load->helper(array('form'));
+        $this->load->library('form_validation');
+        $this->load->model('Country_model','country');
+        $this->load->model('Membership_model','membership');
+        $this->load->model('Member_model','member');
+        $this->load->model('Subscription_model','subscription');
+        $this->load->model('Payment_model','payment');
+                
+        $memberships = $this->membership->getAll($_SESSION['branch'], $_SESSION['gym']);
+        $members = $this->member->getAll($_SESSION['branch'], $_SESSION['gym']);
+        $subs_drop = '';
+        
+        if(intval($id) == 0) {
+			die('you are not authorised to access this link');
+	    } else {
+			$result = $this->subscription->getSubscription($id, $_SESSION['branch'], $_SESSION['gym']);
+			if ($result['status'] == 0) {
+				die('you are not authorised to access this link');
+			} else {
+				$data = $result['data'];
+				$data['payment_date'] = '';
+				$data['name'] = $result['data']['member_name'];
+				$data['payment_source'] = '';
+				$data['subscription'] = $id;
+				$data['amount'] = '';
+				$data['note'] = '';
+				$subscription_result = $result;
+				if ($subscription_result['status'] == 1) {
+				    $data['balance'] = floatval($subscription_result['data']['amount_due']);
+				    $data['sub'] = $subscription_result['data']['membership_name']." ".$this->lang->line('subscribed_on')." [".date('d/m/Y',strtotime($subscription_result['data']['start_date']))."]";
+				    if (floatval($data['balance']) < $subscription_result['data']['amount_to_paid']) {
+				       $data['remaining_amount'] = $data['balance'];
+				    } else {
+					   $data['remaining_amount'] = 0;
+					}
+					
+					$data['payment_required'] = '';
+					$data['next_payment'] =  '';
+				    
+				} else {
+					die('you are not authorised to access this link');
+				}
+				
+				$sub_data = $this->viewsubscription($subscription_result['data']['member_id'], 1);
+				$sel_id = $id;
+				if ($sub_data['status'] == 1) {
+					$result_option = '';
+					if (count($sub_data['data']) > 0) {
+						foreach ($sub_data['data'] as $row => $val) {
+							if ($sel_id == $val['id']) {
+								$chk = 'selected';
+							} else {
+								$chk = '';
+							}
+							$result_option .= '<option '.$chk.' value="'.$val['id'].'">'.$val['membership_name'].' '.$this->lang->line('subscribed_on').' ['.date("d/M/Y", strtotime($val['start_date'])).']</option>';
+						}
+					}
+					$subs_drop = $result_option;
+				}
+				
+			}
+		}
+        
+		if ($this->input->post('post_check',0)) {
+			
+			$this->form_validation->set_rules('member_id', $this->lang->line('member'), 'trim|required',
+					array('required' => $this->lang->line('member').' '.$this->lang->line('is_required'))
+            );
+            
+            $this->form_validation->set_rules('subscription', $this->lang->line('subscription'), 'trim|required',
+					array('required' => $this->lang->line('subscription').' '.$this->lang->line('is_required')),
+            );
+            $this->form_validation->set_rules('amount', $this->lang->line('payment_amount'), 'trim|required|max_length[15]|callback_currency',
+					array('required' => $this->lang->line('payment_amount').' '.$this->lang->line('is_required'),
+					'currency' => $this->lang->line('payment_amount_validation'),
+					'max_length' => $this->lang->line('payment_amount').' '.$this->lang->line('max_length')),
+            );    
+                 
+            if ($this->input->post('payment_source','') !="") {
+				$this->form_validation->set_rules('payment_source', $this->lang->line('source'), 'trim|required',
+						array('required' => $this->lang->line('source').' '.$this->lang->line('is_required'),
+						'max_length' => $this->lang->line('source').' '.$this->lang->line('max_length')),
+				);
+			}
+			
+			if ($this->input->post('transaction_id','') !="") {
+				$this->form_validation->set_rules('transaction_id', $this->lang->line('transaction_id'), 'trim|required',
+						array('required' => $this->lang->line('transaction_id').' '.$this->lang->line('is_required')),
+				);
+			}
+			
+			if ($this->input->post('note','') !="") {
+				$this->form_validation->set_rules('note', $this->lang->line('note'), 'trim|required|max_length[255]',
+						array('required' => $this->lang->line('note').' '.$this->lang->line('is_required'),
+						'max_length' => $this->lang->line('note').' '.$this->lang->line('max_length')),
+				);
+			}
+	           
+            $this->form_validation->set_rules('payment_date', $this->lang->line('payment_date'), 'trim|required|max_length[15]|callback_validate_date',
+						array('required' => $this->lang->line('payment_date').' '.$this->lang->line('is_required'),
+						'validate_date' => $this->lang->line('payment_date').' '.$this->lang->line('invalid_date'),
+						'max_length' => $this->lang->line('payment_date').' '.$this->lang->line('max_length')),
+		    );
+		    
+		    if ($this->input->post('payment_required','no') == 'yes') {
+				$this->form_validation->set_rules('next_payment', $this->lang->line('next_payment'), 'trim|required|max_length[15]|callback_validate_date',
+							array('required' => $this->lang->line('next_payment').' '.$this->lang->line('is_required'),
+							'validate_date' => $this->lang->line('next_payment').' '.$this->lang->line('invalid_date'),
+							'max_length' => $this->lang->line('next_payment').' '.$this->lang->line('max_length')),
+				);
+			}
+		    
+		    
+		    if ($this->input->post('member_id',0) > 0) {
+				$sub_data = $this->viewsubscription($this->input->post('member_id',0),1);
+				$sel_id = $this->input->post('subscription',0);
+				if ($sub_data['status'] == 1) {
+					$result_option = '';
+					if (count($sub_data['data']) > 0) {
+						foreach ($sub_data['data'] as $row => $val) {
+							if ($sel_id == $val['id']) {
+								$chk = 'selected';
+							} else {
+								$chk = '';
+							}
+							$result_option .= '<option '.$chk.' value="'.$val['id'].'">'.$val['membership_name'].' '.$this->lang->line('subscribed_on').' ['.date("d/M/Y", strtotime($val['start_date'])).']</option>';
+						}
+					}
+					$subs_drop = $result_option;
+				}
+			}
+			
+						
+            if (!($this->form_validation->run() == FALSE))
+            {
+				
+				$member_id = $this->input->post('member_id');
+				$subscription = $this->input->post('subscription');
+				$amount = floatval($this->input->post('amount'));
+				$payment_source = $this->input->post('payment_source');
+				$payment_date = $this->input->post('payment_date');
+				$payment_required = $this->input->post('payment_required');
+				$payment_next = $this->input->post('next_payment');
+				$note = $this->input->post('note');
+				
+				//get member name
+				$membername = '';
+				$member_name = $this->member->getMember($this->input->post('member_id'), $_SESSION['branch'], $_SESSION['gym']);
+				if ( isset($member_name['status']) && $member_name['status'] == 1) {
+					$membername = $member_name['data']['first_name'].' '.$member_name['data']['last_name'];
+				} else {
+					die('you are not authorised to access this link');
+				}
+				
+				$data = ['subscription' => $subscription,
+					'member_id' => $member_id,
+					'member_name' => $membername,
+					'amount' => $amount,
+					'source' => $payment_source,
+					'note' => $note,
+					'payment_date' => $this->formatDate($payment_date),
+					'status' => 'active',
+					'gym' => $_SESSION['gym'],
+					'branch' => $_SESSION['branch']		
+				];	
+				
+				$subscription_result_name = $this->subscription->getSubscription($subscription, $_SESSION['branch'], $_SESSION['gym']);
+				if ($subscription_result_name['status'] == 1) {
+					$data['subscription_name'] = $subscription_result_name['data']['membership_name'];
+				}
+							
+				if ($id == 0) {
+					$data['created_date'] = date('Y-m-d H:i:s');
+					$data['transaction_id'] = $this->payment->getCount($_SESSION['gym'], $_SESSION['branch']);
+					$_SESSION['success'] = $this->lang->line('payment').' '.$this->lang->line('add_success');	
+					$this->payment->insert($data);
+				} else {
+					$this->payment->update($data, $id, $_SESSION['gym'], $_SESSION['branch']);
+					$_SESSION['success'] = $this->lang->line('payment').' '.$this->lang->line('update_success');	
+				}
+				
+				if ($payment_required == 'yes') {
+					//update subscription
+					$payment_next = $this->formatDate($payment_next);
+					$this->subscription->update(array('due' => 'yes', 'further_payment_required' => $payment_required, 'next_payment' => $payment_next), $subscription, $_SESSION['gym'], $_SESSION['branch']);											
+				} else {
+					//mark subscription as complete
+					$this->subscription->update(array('due' => '', 'further_payment_required' => $payment_required, 'next_payment' => 'payment_completed'), $subscription, $_SESSION['gym'], $_SESSION['branch']);
+				}
+				//update balance
+				//get full payments
+				$this->updateDue($subscription);
+				redirect(site_url('list-due-payment'));
+			}   
+		}
+		
+		if ($id > 0) {
+			$meta_title = $this->lang->line('due');
+		} else {
+			$meta_title = $this->lang->line('add');
+		}
+		
+		$meta_title .= ' '.$this->lang->line('payment');
+		$view = $this->load->view('payment_due_add',['data' => $data,'subdrop' => $subs_drop,'memberships' => $memberships,'members' => $members ,'id' => $id],true);
+		$this->load->view('layout',['view' => $view, 'meta_title' => $meta_title]);	
+		
+	}
+	
+	
 	
 	
 	
