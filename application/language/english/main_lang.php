@@ -186,6 +186,8 @@ $lang['date_to'] = 'To Date';
 $lang['active'] = 'Active';
 $lang['cancelled'] = 'Cancelled';
 
+$lang['details'] = 'Details';
+
 
 
 

@@ -122,8 +122,8 @@
                   <th><?php echo $this->lang->line('membership'); ?></th>
                   <th><?php echo $this->lang->line('total_amount'); ?></th>
                   <th><?php echo $this->lang->line('due'); ?></th>
-                  <th><?php echo $this->lang->line('start_date'); ?></th>
                   <th><?php echo $this->lang->line('next_payment'); ?></th>
+                  <th><?php echo $this->lang->line('start_date'); ?></th>
                   <th><?php echo $this->lang->line('expires_on'); ?></th>
                   <th style="text-align:center;"><?php echo $this->lang->line('actions'); ?></th>
                 </tr>
@@ -140,16 +140,29 @@
                    <td>
                     <?php echo $this->currency.' '.$row->amount_due; ?>
                   </td>
+                  <td>
+                    <?php if($row->due == 'yes') { echo date('M d, Y',strtotime($row->next_payment)); }
+                          else if ($row->next_payment == 'no_payment_received') {
+							  echo "<small class='label bg-red'>".$this->lang->line('no_payment_received').'</small>';
+						  } else if ($row->next_payment == 'payment_completed') {
+							  echo "<small class='label bg-green'>".$this->lang->line('payment_completed').'</small>';
+						  }
+                    
+                     ?>
+                  </td>
                    <td>
                     <?php echo date('M d, Y',strtotime($row->start_date)); ?>
                   </td>
-                  <td>
-                    <?php echo $this->lang->line($row->next_payment); ?>
-                  </td>
+                 
                    <td>
                     <?php echo date('M d, Y',strtotime($row->end_date)); ?>
                   </td>
-                  <td style="text-align:center;">				
+                  <td style="text-align:center;">	
+					  <?php if ($row->due == 'yes' || $row->next_payment == 'no_payment_received') { ?>
+					  <a title="<?php echo $this->lang->line('add'); ?> <?php echo $this->lang->line('payment'); ?>" href="<?php echo site_url('add-due-payment/'.$row->id); ?>">
+					  <button type="button" class="btn btn-info btn-sm" ><i class="fa fa-plus"></i>
+                </button></a>
+					  <?php } ?>
 					  <a title="<?php echo $this->lang->line('view'); ?>" href="<?php echo site_url('view-subscription/'.$row->id); ?>">
 					  <button type="button" class="btn btn-success btn-sm" ><i class="fa fa-eye"></i>
                 </button></a>

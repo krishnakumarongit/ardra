@@ -182,7 +182,7 @@
                     <?php echo $row->transaction_id; ?>
                   </td>
                    <td>
-                    <small class="label pull-right  <?php if ($row->status == 'active'){ ?>bg-green<?php } else { ?>bg-red<?php } ?>"><?php echo  $this->lang->line($row->status); ?></small>
+                    <small class="label <?php if ($row->status == 'active'){ ?>bg-green<?php } else { ?>bg-red<?php } ?>"><?php echo  $this->lang->line($row->status); ?></small>
                   </td>
                   <td style="text-align:center;">				
 					  <a title="<?php echo $this->lang->line('view'); ?>" href="<?php echo site_url('view-payment/'.$row->id); ?>">

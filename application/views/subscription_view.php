@@ -11,13 +11,21 @@
 </section>
 
 <section class="content">
+	
+	
+	
  
 
 <div class="col-md-12">
+	
+<div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+              <li class="active"><a href="#tab_1" data-toggle="tab"><?php echo $this->lang->line('details'); ?></a></li>
+              <li><a href="#tab_2" data-toggle="tab"><?php echo $this->lang->line('payments'); ?></a></li>              
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane active" id="tab_1">
 
-<div class="box box-default">
-<!-- /.box-header -->
-<div class="box-body">
 <table class="table table-bordered table-striped">
 <tr>
 <td><?php echo $this->lang->line('member'); ?></td>
@@ -55,6 +63,19 @@
 <td><?php echo $this->currency; ?> <?php echo $data['amount_to_paid']; ?></td>
 </tr>
 
+<tr>
+<td><?php echo $this->lang->line('due'); ?> </td>
+<td><?php echo $this->currency; ?> <?php echo $data['amount_due']; ?></td>
+</tr>
+
+
+<?php if ($data['due'] == 'yes') { ?>
+<tr>
+<td><?php echo $this->lang->line('next_payment'); ?> </td>
+<td><?php echo date('d/m/Y',strtotime($data['next_payment'])); ?></td>
+</tr>
+<?php } ?>
+
 
 <tr>
 <td><?php echo $this->lang->line('subscription_starts'); ?></td>
@@ -72,39 +93,35 @@
 </tr>
 
 
+<?php if ($data['next_payment'] == 'payment_completed') { ?>
 <tr>
 <td></td>
-<td>  
-<a title="<?php echo $this->lang->line('edit'); ?>" href="<?php echo site_url('add-subscription/'.$data['id']); ?>">
-  <button type="button" class="btn btn-primary btn-sm" ><i class="fa fa-pencil"></i>
-</button></a>
-
-<a title="<?php echo $this->lang->line('delete'); ?>" onclick="return confirm('<?php echo $this->lang->line('delete_confirm'); ?>');" href="<?php echo site_url('delete-subscription/'.$data['id']); ?>">
-  <button type="button" class="btn btn-danger btn-sm" ><i class="fa fa-trash"></i>
-</button></a>		
-</td>
+<td><?php echo $this->lang->line('payment_completed'); ?></td>
 </tr>
+<?php } ?>
+
+<?php if ($data['next_payment'] == 'no_payment_received') { ?>
+<tr>
+<td></td>
+<td><?php echo $this->lang->line('no_payment_received'); ?></td>
+</tr>
+<?php } ?>
+
+
 
 </table>
-			
-			
-			
-          
-          
-          
-          
-         
-          
-       
-          
-          
-          
-          
-          
-        </div>
-        <!-- /.box-body -->
-        <div class="box-footer">
-        </div>
+         </div>
+              <!-- /.tab-pane -->
+              <div class="tab-pane" id="tab_2">
+                payments
+              </div>
+              <!-- /.tab-pane -->
+             
+              <!-- /.tab-pane -->
+            </div>
+            <!-- /.tab-content -->
+          </div>
+        
       </div>
           <!-- kk -->
               </div>
