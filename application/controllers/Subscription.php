@@ -270,6 +270,7 @@ class Subscription extends MY_Controller {
 	}
 	
 	function delete($id) {
+		
 		//check if this belongs to current gym and branch
 		$this->load->model('Subscription_model','subscription');
 		$this->subscription->delete($id, $_SESSION['branch'], $_SESSION['gym']);
@@ -278,17 +279,20 @@ class Subscription extends MY_Controller {
 	}
 	
 	function view($id) {
+		
 		$this->load->model('Subscription_model','subscription');
+		$this->load->model('Payment_model','payment');
 		$result = $this->subscription->getSubscription($id, $_SESSION['branch'], $_SESSION['gym']);
 		if ($result['status'] == 0) {
 			die('you are not authorised to access this link');
 		} else {
 			$data = $result['data'];
 		}
+		$payments = $this->payment->getPaymentsBySubscription($id, $_SESSION['branch'], $_SESSION['gym']);
 		$this->load->model('Member_model','member');
 		$member = $this->member->getMember($data['member_id'], $_SESSION['branch'], $_SESSION['gym']);
 		$meta_title = $this->lang->line('view').' '.$this->lang->line('subscription');
-		$view = $this->load->view('subscription_view', ['data' => $data,'member' => $member ,'id' => $id], true);
+		$view = $this->load->view('subscription_view', ['data' => $data,'member' => $member ,'payments' => $payments, 'id' => $id], true);
 		$this->load->view('layout',['view' => $view, 'meta_title' => $meta_title]);	
 	
 	}

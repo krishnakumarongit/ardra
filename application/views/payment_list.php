@@ -2,6 +2,8 @@
   <h1>
 	<?php echo $this->lang->line('payment'); ?>
 	<small><?php echo $this->lang->line('list'); ?></small>
+	       <a href="<?php echo site_url('add-payment'); ?>"><button type="submit" class="btn btn-info "><i class="fa fa-plus"></i>&nbsp;<?php echo $this->lang->line('add');?> <?php echo $this->lang->line('payment');?></button></a>
+     
   </h1>
   
   
@@ -140,13 +142,7 @@
           	
 		
           <div class="box">
-			  <div class="box-header with-border">
-        
-
-          <div class="box-tools pull-right">
-            <a href="<?php echo site_url('add-payment'); ?>"><button type="submit" class="btn btn-info pull-right"><i class="fa fa-plus"></i>&nbsp;<?php echo $this->lang->line('add');?> <?php echo $this->lang->line('payment');?></button></a>
-          </div>
-        </div>
+			  
             <!-- /.box-header -->
             <div class="box-body">
 				<div class="table-responsive" >

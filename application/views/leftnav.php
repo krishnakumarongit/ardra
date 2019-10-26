@@ -4,10 +4,20 @@
 
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
-        <li class="header">MAIN NAVIGATION</li>
+        <li class="header">&nbsp;</li>
         
-         <li class=""><a href="<?php echo site_url('list-members'); ?>"><i class="fa fa-users"></i> <span><?php echo $this->lang->line('members'); ?></span></a></li>
-        
+        <li class="treeview  <?php if(isset($this->member_menu) && $this->member_menu == 'active'){ ?> menu-open<?php } ?>" <?php if(isset($this->member_menu) && $this->member_menu == 'active'){ ?> style="height:auto;" <?php } ?>>
+          <a href="#">
+            <i class="fa  fa-briefcase"></i> <span><?php echo $this->lang->line('members'); ?></span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu"  <?php if(isset($this->member_menu) && $this->member_menu == 'active'){ ?> style="display:block" <?php } ?>>
+            <li class="<?php if(isset($this->member_list_menu) && $this->member_list_menu == 'active'){ ?> active<?php } ?>"><a href="<?php echo site_url('list-members'); ?>"><i class="fa fa-circle-o"></i> <?php echo $this->lang->line('member'); ?> <?php echo $this->lang->line('list'); ?></a></li>
+            <li class="<?php if(isset($this->member_add_menu) && $this->member_add_menu == 'active'){ ?> active<?php } ?>"><a href="<?php echo site_url('add-member'); ?>"><i class="fa fa-circle-o"></i> <?php echo $this->lang->line('add'); ?> <?php echo $this->lang->line('member'); ?></a></li>
+          </ul>
+          
         
         <li class="treeview  <?php if(isset($this->membership_menu) && $this->membership_menu == 'active'){ ?> menu-open<?php } ?>" <?php if(isset($this->membership_menu) && $this->membership_menu == 'active'){ ?> style="height:auto;" <?php } ?>>
           <a href="#">

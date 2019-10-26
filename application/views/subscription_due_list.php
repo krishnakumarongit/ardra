@@ -122,12 +122,7 @@
           	
 		
           <div class="box">
-			  <div class="box-header with-border">
-        
 
-          <div class="box-tools pull-right">
-           </div>
-        </div>
             <!-- /.box-header -->
             <div class="box-body">
 				<div class="table-responsive" >

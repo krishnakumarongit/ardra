@@ -16,6 +16,17 @@ class Payment_model extends CI_Model {
             $this->db->update('payments', $data);
         }
         
+        
+        public function getPaymentsBySubscription($id, $gym, $branch) 
+        {
+			$this->db->where('gym', $gym);
+			$this->db->where('branch', $branch);
+			$this->db->where('subscription', $id);
+			$q = $this->db->get('payments');
+			$data = $q->result_array();
+            return $data;			
+		}
+        
         public function getTotalPayment($id, $gym, $branch)
         {
 			$this->db->select('SUM(amount) AS amount', FALSE);

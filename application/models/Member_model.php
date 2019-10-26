@@ -63,7 +63,7 @@ class Member_model extends CI_Model {
 			 if (isset($get['name']) && $get['name'] !="" ) {
 				$where .= ' and ( first_name LIKE "%'.$get['name'].'%" OR last_name LIKE "%'.$get['name'].'%")';
 			 }
-             $query = $this->db->query('select member_id,first_name,last_name,middle_name,dob,sex,created_at  from members WHERE '.$where.' LIMIT '.$start.','.$limit);
+             $query = $this->db->query('select id, member_id,first_name,last_name,middle_name,dob,sex,created_at  from members WHERE '.$where.' LIMIT '.$start.','.$limit);
              return $query->result();		
 		}
 		
@@ -75,7 +75,7 @@ class Member_model extends CI_Model {
 			 if (isset($get['name']) && $get['name'] !="" ) {
 				$where .= ' and ( first_name LIKE "%'.$get['name'].'%" OR last_name LIKE "%'.$get['name'].'%")';
 			 }
-			 $query = $this->db->query('select member_id,first_name,last_name,middle_name,dob,sex,created_at  from members WHERE '.$where);
+			 $query = $this->db->query('select id, member_id, first_name, last_name, middle_name,dob,sex,created_at  from members WHERE '.$where);
 			 return $query->num_rows();
             
         }

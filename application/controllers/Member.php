@@ -6,15 +6,21 @@ class Member extends MY_Controller {
     public function __construct()
 	{
 		parent::__construct();
+		$this->member_menu = 'active';
+		$this->member_add_menu = ''; 
+		$this->member_list_menu = '';
 		
 	}
 
 	public function add($id = 0)
 	{
+		$this->member_add_menu = 'active'; 
+	
 		$this->load->helper(array('form'));
         $this->load->library('form_validation');
         $this->load->model('Country_model','country');
         $this->load->model('Member_model','member');
+         $this->load->model('Subscription_model','subscription');
         
         if($id == 0) {
 			$maxId = $this->member->getMemberId($_SESSION['branch'], $_SESSION['gym']);
@@ -22,7 +28,7 @@ class Member extends MY_Controller {
 			'email' => '','address' => '','city' => '','state' => '','country' => '','zip_code' => '',
 			'home_phone' => '','work_phone' => '','idcard' => '','lisence' => '','emmergency_contact_name' => '',
 			'emmergency_contact_number' => '',
-			'source' => '','source_note' => '','disability' => '','disability_note' => '','middle_name' => ''];
+			'source' => '','source_note' => '','disability' => '','disability_note' => '','middle_name' => '', 'subscription' => array()];
 	    } else {
 			$result = $this->member->getMember($id, $_SESSION['branch'], $_SESSION['gym']);
 			if ($result['status'] == 0) {
@@ -30,6 +36,13 @@ class Member extends MY_Controller {
 			} else {
 				$data = $result['data'];
 				$data['dob'] = date('d/m/Y', strtotime($data['dob']));
+				$data['subscription'] = $this->subscription->getSubscriptionByMember($id, $_SESSION['branch'], $_SESSION['gym']);
+			    if ($data['subscription']['status'] == 1) {
+					$data['subscription'] = $data['subscription']['data'];
+				} else {
+					$data['subscription'] = array();
+				}
+			
 			}
 		}
         $country = $this->country->getCountries();
@@ -278,6 +291,7 @@ class Member extends MY_Controller {
 	
 	function list()
 	{
+		$this->member_list_menu = 'active';
 		$this->load->library("pagination");
 		$this->load->model('Member_model','member');
 		$config = array();
@@ -304,6 +318,10 @@ class Member extends MY_Controller {
         $page = ($this->uri->segment(2)) ? $this->uri->segment(PAGE_SEGMENT) : 0;
         $data['links'] = $this->pagination->create_links();
         $data['memebrs'] = $this->member->getMembers($config["per_page"], $page, $_GET, $_SESSION['branch'], $_SESSION['gym']);
+        
+           
+        
+        
 		$view = $this->load->view('member_list',['data' => $data, 'total' => $config["total_rows"]],true);
 		$this->load->view('layout',['view' => $view, 'meta_title' => $this->lang->line('members')]);		
 	}

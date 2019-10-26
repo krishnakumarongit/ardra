@@ -23,9 +23,8 @@
               <li class="active"><a href="#tab_1" data-toggle="tab"><?php echo $this->lang->line('details'); ?></a></li>
               <li><a href="#tab_2" data-toggle="tab"><?php echo $this->lang->line('payments'); ?></a></li>              
             </ul>
-            <div class="tab-content">
-              <div class="tab-pane active" id="tab_1">
-
+<div class="tab-content">
+<div class="tab-pane active" id="tab_1">
 <table class="table table-bordered table-striped">
 <tr>
 <td><?php echo $this->lang->line('member'); ?></td>
@@ -113,7 +112,54 @@
          </div>
               <!-- /.tab-pane -->
               <div class="tab-pane" id="tab_2">
-                payments
+                				<div class="table-responsive" >
+              <table class="table table-bordered">
+                <tbody>
+				<tr>
+                  <th><?php echo $this->lang->line('member'); ?></th>
+                  <th><?php echo $this->lang->line('membership'); ?></th>
+                  <th><?php echo $this->lang->line('payment_amount'); ?></th>
+                  <th><?php echo $this->lang->line('source'); ?></th>
+                  <th><?php echo $this->lang->line('payment_date'); ?></th>
+                  <th><?php echo $this->lang->line('transaction_id'); ?></th>
+                  <th><?php echo $this->lang->line('status'); ?></th>
+                  <th style="text-align:center;"><?php echo $this->lang->line('actions'); ?></th>
+                </tr>
+                <?php 
+                if (count($payments) > 0) { 
+				foreach($payments as $key => $row) {	
+				?>
+                <tr>
+                  <td><?php echo substr($row['member_name'],0,15) ; ?></td>
+                  <td><?php echo substr($row['subscription_name'],0,10); ?></td>
+                  <td>
+                    <?php echo $this->currency.' '.$row['amount']; ?>
+                  </td>
+                   <td>
+                    <?php echo $this->lang->line($row['source']); ?>
+                  </td>
+                   <td>
+                    <?php echo date('M d, Y',strtotime($row['payment_date'])); ?>
+                  </td>
+                  <td>
+                    <?php echo $row['transaction_id']; ?>
+                  </td>
+                   <td>
+                    <small class="label <?php if ($row['status'] == 'active'){ ?>bg-green<?php } else { ?>bg-red<?php } ?>"><?php echo  $this->lang->line($row['status']); ?></small>
+                  </td>
+                  <td style="text-align:center;">				
+					  <a title="<?php echo $this->lang->line('view'); ?>" href="<?php echo site_url('view-payment/'.$row['id']); ?>">
+					       <button type="button" class="btn btn-success btn-sm" ><i class="fa fa-eye"></i></button>
+                      </a>                     
+                </td>
+                </tr>
+                <?php }} else { ?>
+                 <tr><td colspan="8"><?php echo $this->lang->line('no_records'); ?></td></tr>
+                <?php } ?>
+              </tbody>              
+              </table>
+              </div>
+
               </div>
               <!-- /.tab-pane -->
              

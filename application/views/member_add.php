@@ -39,7 +39,12 @@
               <li class="active"><a id="ta1" href="#tab_1" data-toggle="tab" aria-expanded="true"><?php echo $this->lang->line('personal_details'); ?></a></li>
               <li class=""><a id="ta2" href="#tab_2" data-toggle="tab" aria-expanded="false"><?php echo $this->lang->line('contact_information'); ?></a></li>                    
               <li class=""><a id="ta3" href="#tab_3" data-toggle="tab" aria-expanded="false"><?php echo $this->lang->line('other_details'); ?></a></li>
+            
+            <?php if($id > 0) { ?>
+            
               <li class=""><a id="ta4" href="#tab_5" data-toggle="tab" aria-expanded="false"><?php echo $this->lang->line('subscription_details'); ?></a></li>
+            <?php } ?>
+            
             </ul>
             <div class="tab-content">
               <div class="tab-pane active" id="tab_1">
@@ -298,31 +303,61 @@
 
 <div class="tab-pane" id="tab_5">
 	<div class="row">
-		<div class="col-md-6">
-			<div class="form-group">
-			</div>
-		<!-- /.form-group -->
-		<!-- /.form-group -->
-		</div>
-		<!-- /.col -->
-		<div class="col-md-6">
-			<div class="form-group">
-			  </div>
+		<div class="col-md-12">
+	<div class="table-responsive" >
+              <table class="table table-bordered">
+                <tbody>
+				<tr>
+                  <th><?php echo $this->lang->line('member'); ?></th>
+                  <th><?php echo $this->lang->line('membership'); ?></th>
+                  <th><?php echo $this->lang->line('total_amount'); ?></th>
+                  <th><?php echo $this->lang->line('due'); ?></th>
+                  <th><?php echo $this->lang->line('next_payment'); ?></th>
+                  <th><?php echo $this->lang->line('start_date'); ?></th>
+                  <th><?php echo $this->lang->line('expires_on'); ?></th>
+                </tr>
+                <?php 
+                if (count($data['subscription']) > 0) { 
+				foreach($data['subscription'] as $row) {	
+				?>
+                <tr>
+                  <td><?php echo ucwords(substr($row['member_name'],0,15)) ; ?></td>
+                  <td><?php echo ucwords(substr($row['membership_name'],0,10)); ?></td>
+                  <td>
+                    <?php echo $this->currency.' '.$row['amount_to_paid']; ?>
+                  </td>
+                   <td>
+                    <?php echo $this->currency.' '.$row['amount_due']; ?>
+                  </td>
+                  <td>
+                    <?php if($row['due'] == 'yes') { echo date('M d, Y',strtotime($row['next_payment'])); }
+                          else if ($row['next_payment'] == 'no_payment_received') {
+							  echo "<small class='label bg-red'>".$this->lang->line('no_payment_received').'</small>';
+						  } else if ($row['next_payment'] == 'payment_completed') {
+							  echo "<small class='label bg-green'>".$this->lang->line('payment_completed').'</small>';
+						  }
+                    
+                     ?>
+                  </td>
+                   <td>
+                    <?php echo date('M d, Y',strtotime($row['start_date'])); ?>
+                  </td>
+                 
+                   <td>
+                    <?php echo date('M d, Y',strtotime($row['end_date'])); ?>
+                  </td>
+                 
+                </tr>
+                <?php }} else { ?>
+                 <tr><td colspan="7"><?php echo $this->lang->line('no_records'); ?></td></tr>
+                <?php } ?>
+              </tbody>              
+              </table>
+              </div>
+              
 		</div>
     </div>
-	<div class="row">
-		<div class="col-md-6">
-			<div class="form-group">
-			<button type="submit" class="btn btn-primary"><?php echo $this->lang->line('submit'); ?></button>
-			</div>
-		<!-- /.form-group -->
-		<!-- /.form-group -->
-		</div>
-		<!-- /.col -->
-		<div class="col-md-6">
-			<div class="form-group">
-			</div>
-	    </div>
+	
 </div>
 		
 		

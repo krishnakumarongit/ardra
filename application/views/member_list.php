@@ -2,6 +2,8 @@
   <h1>
 	<?php echo $this->lang->line('members'); ?>
 	<small><?php echo $this->lang->line('list'); ?></small>
+	     <a href="<?php echo site_url('add-member'); ?>"><button type="submit" class="btn btn-info "><i class="fa fa-plus"></i>&nbsp;<?php echo $this->lang->line('add');?> <?php echo $this->lang->line('member');?></button></a>
+  
   </h1>
   <ol class="breadcrumb">
 	<li><a href="<?php echo site_url('dashboard'); ?>"><i class="fa fa-dashboard"></i> <?php echo $this->lang->line('home'); ?></a></li>
@@ -87,7 +89,7 @@
                   <th><?php echo $this->lang->line('dob_label'); ?></th>
                   <th><?php echo $this->lang->line('sex'); ?></th>
                   <th><?php echo $this->lang->line('since'); ?></th>
-                  <th><?php echo $this->lang->line('actions'); ?></th>
+                  <th style="text-align:center;"><?php echo $this->lang->line('actions'); ?></th>
                 </tr>
                 <?php 
                 if (count($data['memebrs']) > 0) { 
@@ -104,7 +106,10 @@
                   </td>
                   <td><?php echo date('d/M/Y',strtotime($row->created_at)); ?></td>
                   <td style="text-align:center;">				
-                  <button type="button" class="btn btn-info"><i class="fa fa-cogs"></i>&nbsp;<?php echo $this->lang->line('actions'); ?></button>
+
+                   <a title="<?php echo $this->lang->line('view'); ?>" href="<?php echo site_url('add-member/'.$row->id); ?>">
+					  <button type="button" class="btn btn-success btn-sm" ><i class="fa fa-eye"></i>
+                </button></a>   
                 </td>
                 </tr>
                 <?php }} else { ?>
