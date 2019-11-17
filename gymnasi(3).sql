@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 17, 2019 at 08:57 AM
+-- Generation Time: Oct 20, 2019 at 03:48 PM
 -- Server version: 5.7.27-0ubuntu0.16.04.1
 -- PHP Version: 7.3.9-1+ubuntu16.04.1+deb.sury.org+1
 
@@ -39,16 +39,15 @@ CREATE TABLE `branch_setting` (
   `country_code` varchar(100) NOT NULL,
   `master` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
-  `timezone` varchar(255) DEFAULT NULL,
-  `invoice_header` text
+  `timezone` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `branch_setting`
 --
 
-INSERT INTO `branch_setting` (`id`, `gym_id`, `theme`, `currency`, `language`, `currency_code`, `country`, `country_code`, `master`, `name`, `timezone`, `invoice_header`) VALUES
-(1, 1, 'skin-blue', '$', 'english', 'dollar', 'USA', 'US', 'yes', 'GOLDS GYM', 'Africa/Bamako', NULL);
+INSERT INTO `branch_setting` (`id`, `gym_id`, `theme`, `currency`, `language`, `currency_code`, `country`, `country_code`, `master`, `name`, `timezone`) VALUES
+(1, 1, 'skin-red', '$', 'english', 'dollar', 'USA', 'US', 'yes', 'GOLDS GYM', 'Africa/Bamako');
 
 -- --------------------------------------------------------
 
@@ -317,38 +316,6 @@ INSERT INTO `countries` (`id`, `country_code`, `country_name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `invoices`
---
-
-CREATE TABLE `invoices` (
-  `id` int(11) NOT NULL,
-  `client_name` varchar(255) NOT NULL,
-  `client_email` varchar(255) NOT NULL,
-  `mobile` varchar(255) NOT NULL,
-  `address` text NOT NULL,
-  `invoice_date` date NOT NULL,
-  `create_at` datetime NOT NULL,
-  `discount` varchar(255) NOT NULL,
-  `tax` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `invoice_items`
---
-
-CREATE TABLE `invoice_items` (
-  `id` int(11) NOT NULL,
-  `item` varchar(255) NOT NULL,
-  `qty` varchar(255) NOT NULL,
-  `rate` varchar(255) NOT NULL,
-  `invoice_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `members`
 --
 
@@ -557,18 +524,6 @@ ALTER TABLE `countries`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `invoices`
---
-ALTER TABLE `invoices`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `invoice_items`
---
-ALTER TABLE `invoice_items`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `members`
 --
 ALTER TABLE `members`
@@ -619,18 +574,6 @@ ALTER TABLE `branch_setting`
 --
 ALTER TABLE `countries`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=247;
-
---
--- AUTO_INCREMENT for table `invoices`
---
-ALTER TABLE `invoices`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `invoice_items`
---
-ALTER TABLE `invoice_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `members`
