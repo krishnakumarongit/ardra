@@ -239,10 +239,12 @@ class Member extends MY_Controller {
 				if ($id == 0) {
 					$data['created_at'] = date('Y-m-d H:i:s');
 					$this->member->insert($data);
+					$_SESSION['success'] = $this->lang->line('member').' '.$this->lang->line('update_success');	
 				} else {
 					$this->member->update($data, $id);
+					$_SESSION['success'] = $this->lang->line('member').' '.$this->lang->line('update_success');	
 				}
-				die('success');
+				redirect(site_url('list-members'));
 			}   
 		}
 		

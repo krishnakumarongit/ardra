@@ -179,14 +179,30 @@ $lang['debit_card'] = 'Debit Card';
 $lang['net_banking'] = 'Net Banking';
 $lang['subscribed_on'] = 'Subscribed On';
 $lang['no_subscription'] = 'Users not subscribed to any memberships yet';
-
 $lang['date_from'] = 'From Date';
 $lang['date_to'] = 'To Date';
-
 $lang['active'] = 'Active';
 $lang['cancelled'] = 'Cancelled';
-
 $lang['details'] = 'Details';
+$lang['invoice'] = 'Invoice';
+$lang['invoices'] = 'Invoices';
+$lang['bill_to'] = 'Bill To';
+$lang['invoice_date'] = 'Invoice Date';
+$lang['client_email'] = 'Client Email';
+$lang['client_mobile'] = 'Client Mobile';
+$lang['client_address'] = 'Client Address';
+$lang['item'] = 'Item';
+$lang['quantity'] = 'Quantity';
+$lang['rate'] = 'Rate';
+$lang['tax'] = 'Tax';
+$lang['amount'] = 'Amount';
+$lang['total_single'] = 'Total';
+
+
+
+
+
+
 
 
 
